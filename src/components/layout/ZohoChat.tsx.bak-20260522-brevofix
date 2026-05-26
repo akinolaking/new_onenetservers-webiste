@@ -1,0 +1,17 @@
+"use client";
+
+import { useEffect } from "react";
+import { ensureBrevoConversations } from "@/lib/live-chat";
+
+/**
+ * Backward-compatible chat bootstrapper.
+ * The site now uses Brevo Conversations; this component intentionally remains
+ * only so older imports do not reintroduce a dead placeholder provider.
+ */
+export function ZohoChat() {
+  useEffect(() => {
+    ensureBrevoConversations();
+  }, []);
+
+  return null;
+}

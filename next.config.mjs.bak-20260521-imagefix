@@ -1,0 +1,62 @@
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  output: "standalone",
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
+      },
+    ],
+  },
+
+  typescript: {
+    // Vendored animate-ui components have upstream type errors — ignore during build
+    ignoreBuildErrors: true,
+  },
+
+  async headers() {
+    return [
+      {
+        source: "/(.*)",
+        headers: [
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          { key: "X-Frame-Options", value: "SAMEORIGIN" },
+          { key: "X-XSS-Protection", value: "1; mode=block" },
+          {
+            key: "Referrer-Policy",
+            value: "strict-origin-when-cross-origin",
+          },
+          {
+            key: "Permissions-Policy",
+            value: "camera=(), microphone=(), geolocation=()",
+          },
+        ],
+      },
+    ];
+  },
+
+  async redirects() {
+    return [
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "host.onenetservers.net" }],
+        destination: "https://onenetservers.net/:path*",
+        permanent: true,
+      },
+      { source: "/about-us.php", destination: "/about", permanent: true },
+      { source: "/blog.php", destination: "/blog", permanent: true },
+      { source: "/domain.php", destination: "/domains", permanent: true },
+      { source: "/web-hosting.php", destination: "/hosting/web", permanent: true },
+      { source: "/cpanel-hosting.php", destination: "/hosting/web", permanent: true },
+      { source: "/wordpress-hosting.php", destination: "/hosting/wordpress", permanent: true },
+      { source: "/vps-hosting.php", destination: "/hosting/vps", permanent: true },
+      { source: "/ssl-certificate.php", destination: "/security/ssl", permanent: true },
+      { source: "/privacy-policy.php", destination: "/legal/privacy", permanent: true },
+      { source: "/terms-and-conditions.php", destination: "/legal/terms", permanent: true },
+      { source: "/refund-policy.php", destination: "/legal/terms", permanent: true },
+    ];
+  },
+};
+
+export default nextConfig;

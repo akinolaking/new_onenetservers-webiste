@@ -1,0 +1,308 @@
+"use client";
+
+import { SectionHeader } from "@/components/shared/SectionHeader";
+import { differentiators } from "@/lib/home-data";
+import { useEffect, useState } from "react";
+
+const VISUAL_FADE_MS = 250;
+
+function ChevronIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M6 9l6 6 6-6" />
+    </svg>
+  );
+}
+
+function GlobeVisual() {
+  const regions = [
+    { label: "US", className: "diff-visual__region-node diff-visual__region-node--us" },
+    { label: "EU", className: "diff-visual__region-node diff-visual__region-node--eu" },
+    { label: "NG", className: "diff-visual__region-node diff-visual__region-node--ng" },
+    { label: "APAC", className: "diff-visual__region-node diff-visual__region-node--apac" },
+    { label: "AF", className: "diff-visual__region-node diff-visual__region-node--af" },
+  ];
+
+  return (
+    <div className="diff-visual diff-visual--regions">
+      <span className="diff-visual__chip diff-visual__chip--status">
+        <span className="diff-visual__status-dot" />
+        99.9% uptime
+      </span>
+
+      <div className="diff-visual__region-stage diff-visual__hero-float">
+        <div className="diff-visual__region-map" aria-hidden="true">
+          <svg className="diff-visual__region-routes" viewBox="0 0 420 420" fill="none">
+            <path d="M108 248C144 176 210 142 284 154" />
+            <path d="M140 284C204 302 272 286 320 236" />
+            <path d="M184 120C240 112 301 146 338 210" />
+          </svg>
+          {regions.map((region) => (
+            <span key={region.label} className={region.className}>
+              {region.label}
+            </span>
+          ))}
+          <span className="diff-visual__region-pulse diff-visual__region-pulse--one" />
+          <span className="diff-visual__region-pulse diff-visual__region-pulse--two" />
+          <span className="diff-visual__region-pulse diff-visual__region-pulse--three" />
+          <span className="diff-visual__region-pulse diff-visual__region-pulse--four" />
+          <span className="diff-visual__region-pulse diff-visual__region-pulse--five" />
+        </div>
+
+        <div className="diff-visual__uptime-card">
+          <div className="diff-visual__uptime-top">
+            <span>Edge uptime</span>
+            <strong>All 9 regions healthy</strong>
+          </div>
+          <div className="diff-visual__uptime-meters" aria-hidden="true">
+            <span /><span /><span /><span />
+          </div>
+          <svg className="diff-visual__uptime-line" viewBox="0 0 320 92" fill="none" aria-hidden="true">
+            <path d="M8 60C38 60 46 28 74 28C100 28 104 62 132 62C162 62 170 18 198 18C226 18 230 50 258 50C282 50 290 32 312 32" />
+          </svg>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function FreeYearVisual() {
+  return (
+    <div className="diff-visual diff-visual--free-year">
+      <span className="diff-visual__mini-tag diff-visual__mini-tag--domain">Domain</span>
+      <span className="diff-visual__mini-tag diff-visual__mini-tag--hosting">Hosting</span>
+      <span className="diff-visual__mini-tag diff-visual__mini-tag--email">Email</span>
+      <div className="diff-visual__browser diff-visual__hero-float">
+        <div className="diff-visual__browser-bar">
+          <span />
+          <span />
+          <span />
+        </div>
+        <div className="diff-visual__browser-body">
+          <div className="diff-visual__browser-window" />
+          <div className="diff-visual__browser-window diff-visual__browser-window--alt" />
+          <div className="diff-visual__browser-ribbon">FREE</div>
+        </div>
+      </div>
+      <div className="diff-visual__calendar">
+        <strong>12</strong>
+        <span>months</span>
+      </div>
+      <div className="diff-visual__card-off">
+        <span className="diff-visual__card-off-line" />
+      </div>
+    </div>
+  );
+}
+
+function NiraVisual() {
+  return (
+    <div className="diff-visual diff-visual--nira">
+      <span className="diff-visual__seal">NiRA Accredited</span>
+      <div className="diff-visual__privacy-shield" aria-hidden="true" />
+      <div className="diff-visual__address diff-visual__hero-float">
+        <div className="diff-visual__address-bar">
+          <span className="diff-visual__lock" />
+          <span className="diff-visual__domain-text">yourbrand.ng</span>
+        </div>
+      </div>
+      <span className="diff-visual__domain-chip diff-visual__domain-chip--one">.ng</span>
+      <span className="diff-visual__domain-chip diff-visual__domain-chip--two">.com.ng</span>
+      <span className="diff-visual__domain-chip diff-visual__domain-chip--three">.gov.ng</span>
+    </div>
+  );
+}
+
+function DefenseVisual() {
+  return (
+    <div className="diff-visual diff-visual--defense">
+      <span className="diff-visual__chip diff-visual__chip--cloudflare">Powered by Cloudflare</span>
+      <span className="diff-visual__chip diff-visual__chip--counter">1,284 threats blocked today</span>
+      <div className="diff-visual__defense-shield diff-visual__hero-float">
+        <div className="diff-visual__defense-core" />
+      </div>
+      <span className="diff-visual__bot diff-visual__bot--one" />
+      <span className="diff-visual__bot diff-visual__bot--two" />
+      <span className="diff-visual__bot diff-visual__bot--three" />
+      <span className="diff-visual__visitor" />
+      <span className="diff-visual__deflect diff-visual__deflect--one" />
+      <span className="diff-visual__deflect diff-visual__deflect--two" />
+      <span className="diff-visual__deflect diff-visual__deflect--three" />
+    </div>
+  );
+}
+
+function BackupsVisual() {
+  return (
+    <div className="diff-visual diff-visual--backups">
+      <span className="diff-visual__chip diff-visual__chip--history">30-day history</span>
+      <span className="diff-visual__chip diff-visual__chip--cloud">Cloud sync ✓</span>
+      <div className="diff-visual__backup-stack diff-visual__hero-float">
+        <div className="diff-visual__backup-card diff-visual__backup-card--back">2 days ago</div>
+        <div className="diff-visual__backup-card diff-visual__backup-card--mid">Yesterday</div>
+        <div className="diff-visual__backup-card diff-visual__backup-card--front">Today</div>
+        <button type="button" className="diff-visual__restore-btn" tabIndex={-1}>Restore</button>
+      </div>
+    </div>
+  );
+}
+
+function MonitoringVisual() {
+  return (
+    <div className="diff-visual diff-visual--monitoring">
+      <span className="diff-visual__chip diff-visual__chip--support">24/7</span>
+      <div className="diff-visual__dashboard diff-visual__hero-float">
+        <div className="diff-visual__dashboard-top">
+          <span>Uptime</span>
+          <strong>All systems nominal</strong>
+        </div>
+        <svg className="diff-visual__dashboard-line" viewBox="0 0 320 160" fill="none" aria-hidden="true">
+          <path d="M10 106C56 108 74 106 111 106C144 106 158 106 193 105C219 105 246 104 310 105" />
+        </svg>
+      </div>
+      <div className="diff-visual__agent-avatar">
+        <span className="diff-visual__agent-dot" />
+      </div>
+      <div className="diff-visual__resolve-toast">Issue resolved in 2m</div>
+    </div>
+  );
+}
+
+function SupportVisual() {
+  return (
+    <div className="diff-visual diff-visual--support">
+      <div className="diff-visual__verified-avatar">✓</div>
+      <div className="diff-visual__reply-chip">median reply: 4 min</div>
+      <div className="diff-visual__chat diff-visual__hero-float">
+        <div className="diff-visual__chat-bubble diff-visual__chat-bubble--customer">
+          Need help moving our live site without downtime.
+        </div>
+        <div className="diff-visual__chat-bubble diff-visual__chat-bubble--engineer">
+          We’ll clone, test, and switch DNS when you’re ready. — Senior engineer
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function renderVisual(key: string) {
+  switch (key) {
+    case "regions":
+      return <GlobeVisual />;
+    case "free-year":
+      return <FreeYearVisual />;
+    case "nira":
+      return <NiraVisual />;
+    case "defense":
+      return <DefenseVisual />;
+    case "backups":
+      return <BackupsVisual />;
+    case "monitoring":
+      return <MonitoringVisual />;
+    case "support":
+      return <SupportVisual />;
+    default:
+      return null;
+  }
+}
+
+export function Differentiators() {
+  const [activeId, setActiveId] = useState(differentiators[0]?.id ?? "");
+  const [displayId, setDisplayId] = useState(activeId);
+  const [previousId, setPreviousId] = useState<string | null>(null);
+  const [reduceMotion, setReduceMotion] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const sync = () => setReduceMotion(media.matches);
+    sync();
+    media.addEventListener("change", sync);
+    return () => media.removeEventListener("change", sync);
+  }, []);
+
+  useEffect(() => {
+    if (!activeId || activeId === displayId) return;
+    if (reduceMotion) {
+      setDisplayId(activeId);
+      setPreviousId(null);
+      return;
+    }
+
+    setPreviousId(displayId);
+    setDisplayId(activeId);
+    const timer = window.setTimeout(() => setPreviousId(null), VISUAL_FADE_MS);
+    return () => window.clearTimeout(timer);
+  }, [activeId, displayId, reduceMotion]);
+
+  const activeItem = differentiators.find((item) => item.id === displayId) ?? differentiators[0];
+  const previousItem = previousId ? differentiators.find((item) => item.id === previousId) : null;
+
+  return (
+    <section className="diff-section homepage-section" id="why">
+      <div className="shell">
+        <SectionHeader
+          eyebrow="WHY ONENET SERVERS"
+          title="Reasons founders choose us."
+          lead="Over 10 years of delivering excellence - our commitments to your success speaks for us."
+          centered
+        />
+
+        <div className="diff-accordion">
+          <div className="diff-accordion__visual-wrap">
+            <div className="diff-accordion__visual-frame" role="img" aria-label={activeItem.visualLabel}>
+              {previousItem && !reduceMotion ? (
+                <div className="diff-accordion__visual-layer diff-accordion__visual-layer--out" aria-hidden="true">
+                  {renderVisual(previousItem.visualKey)}
+                </div>
+              ) : null}
+              <div className="diff-accordion__visual-layer diff-accordion__visual-layer--in" key={displayId}>
+                {renderVisual(activeItem.visualKey)}
+              </div>
+            </div>
+          </div>
+
+          <div className="diff-accordion__list">
+            {differentiators.map((item) => {
+              const isActive = item.id === activeId;
+              const triggerId = `diff-trigger-${item.id}`;
+              const panelId = `diff-panel-${item.id}`;
+              return (
+                <article key={item.id} className={`diff-accordion__item${isActive ? " is-active" : ""}`}>
+                  <h3 className="diff-accordion__heading">
+                    <button
+                      type="button"
+                      id={triggerId}
+                      className="diff-accordion__trigger"
+                      aria-expanded={isActive}
+                      aria-controls={panelId}
+                      onClick={() => {
+                        if (!isActive) setActiveId(item.id);
+                      }}
+                    >
+                      <span className="diff-accordion__headline">{item.headline}</span>
+                      <span className="diff-accordion__chevron" aria-hidden="true">
+                        <ChevronIcon />
+                      </span>
+                    </button>
+                  </h3>
+                  <div
+                    id={panelId}
+                    className="diff-accordion__panel"
+                    role="region"
+                    aria-labelledby={triggerId}
+                    aria-hidden={!isActive}
+                  >
+                    <div className="diff-accordion__panel-inner">
+                      <p className="diff-accordion__body">{item.body}</p>
+                    </div>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}

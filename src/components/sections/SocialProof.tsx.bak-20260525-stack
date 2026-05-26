@@ -1,0 +1,68 @@
+"use client";
+
+import Image from "next/image";
+import { Fade } from "@/components/animate-ui/primitives/effects/fade";
+import { testimonials } from "@/lib/home-data";
+
+// Curated Unsplash photos — African business contexts
+const STORY_IMAGES: Record<string, string> = {
+  food:     "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&w=800&q=80",
+  fashion:  "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=800&q=80",
+  services: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80",
+};
+
+const CATEGORY_LABELS: Record<string, string> = {
+  food:     "Food & Catering · Lagos",
+  fashion:  "Fashion & Retail · London",
+  services: "Professional Services · Abuja",
+};
+
+export function SocialProof() {
+  return (
+    <section className="story-section" id="stories">
+      <div className="shell">
+        <Fade inView inViewOnce>
+          <div className="story-section__head">
+            <div className="story-section__head-left">
+              <p className="story-section__eyebrow">Real businesses. Real results.</p>
+              <h2 className="story-section__title">
+                From first idea to a website that converts.
+              </h2>
+            </div>
+            <p className="story-section__sub">
+              Business owners across Nigeria and the UK, live online in minutes, not months.
+            </p>
+          </div>
+        </Fade>
+
+        <div className="story-grid">
+          {testimonials.map((t, i) => (
+            <Fade key={t.name} inView inViewOnce delay={i * 100}>
+              <article className="story-card">
+                <div className="story-card__img-wrap">
+                  <Image
+                    src={STORY_IMAGES[t.categoryKey] ?? STORY_IMAGES.food}
+                    alt={`${t.name}, ${t.business}`}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                    className="story-card__img"
+                  />
+                </div>
+                <div className="story-card__body">
+                  <span className="story-card__eyebrow">
+                    {CATEGORY_LABELS[t.categoryKey] ?? t.category}
+                  </span>
+                  <h3 className="story-card__name">{t.business}</h3>
+                  <p className="story-card__desc">{t.story}</p>
+                  <p className="story-card__cta story-card__cta--static" aria-label={`Customer story from ${t.business}`}>
+                    Verified customer story
+                  </p>
+                </div>
+              </article>
+            </Fade>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}

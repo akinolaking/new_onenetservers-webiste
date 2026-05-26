@@ -1,0 +1,67 @@
+import Image from "next/image";
+
+const partners = [
+  {
+    name: "Amazon Web Services",
+    src: "/assets/partners/Amazon_Web_Services_Logo-kl.png",
+    width: 1000,
+    height: 1000,
+  },
+  {
+    name: "Itana",
+    src: "/assets/partners/Itana_Logo.png",
+    width: 200,
+    height: 200,
+  },
+  {
+    name: "NiRA",
+    src: "/assets/partners/NIRA.webp",
+    width: 512,
+    height: 512,
+  },
+  {
+    name: "Tech Cabal",
+    src: "/assets/partners/Tech-Cabal-600x400-1.gif",
+    width: 600,
+    height: 400,
+  },
+  {
+    name: "Tech Nation",
+    src: "/assets/partners/Tech-Nation-Logo-Sifted.png",
+    width: 7068,
+    height: 4385,
+  },
+  {
+    name: "UK Home Office",
+    src: "/assets/partners/home-office-logo.png",
+    width: 1200,
+    height: 630,
+  },
+] as const;
+
+export function TrustBar() {
+  return (
+    <section className="trust-bar" aria-label="Trusted partners and media mentions">
+      <div className="trust-bar__shell shell">
+        <p className="trust-bar__eyebrow">
+          Backed, Featured and Trusted by Top media, organisations and industry leaders
+        </p>
+
+        <div className="trust-bar__logos" role="list" aria-label="Partners and media logos">
+          {partners.map((partner) => (
+            <div key={partner.name} className="trust-bar__logo-card" role="listitem" aria-label={partner.name}>
+              <Image
+                src={partner.src}
+                alt={partner.name}
+                width={partner.width}
+                height={partner.height}
+                className="trust-bar__logo-image"
+                sizes="(max-width: 640px) 40vw, (max-width: 1100px) 28vw, 16vw"
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}

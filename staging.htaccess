@@ -1,0 +1,90 @@
+# ============================================================
+# OneNet Servers — staging.onenetservers.net
+# Next.js (port 3001) + WHMCS 9 with SEO URLs
+# ============================================================
+
+DirectoryIndex disabled
+
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteBase /
+
+# ── HostX legacy .php marketing pages → Next.js (301) ───────────────
+# Guard: only redirect direct browser requests, not internal rewrites
+RewriteCond %{ENV:REDIRECT_STATUS} ^$
+RewriteRule ^index\.php$                  / [R=301,L]
+RewriteRule ^wordpress-hosting\.php$      /hosting/wordpress [R=301,L]
+RewriteRule ^web-hosting\.php$            /hosting/web [R=301,L]
+RewriteRule ^cpanel-hosting\.php$         /hosting/web [R=301,L]
+RewriteRule ^plesk-hosting\.php$          /hosting/web [R=301,L]
+RewriteRule ^windows-hosting\.php$        /hosting/web [R=301,L]
+RewriteRule ^vps-hosting\.php$            /hosting/vps [R=301,L]
+RewriteRule ^vps-privatecloud\.php$       /hosting/vps [R=301,L]
+RewriteRule ^vps-publiccloud\.php$        /hosting/vps [R=301,L]
+RewriteRule ^dedicated-server\.php$       /hosting/vps [R=301,L]
+RewriteRule ^enterprise-servers\.php$     /hosting/vps [R=301,L]
+RewriteRule ^game-servers\.php$           /hosting/vps [R=301,L]
+RewriteRule ^ssl-certificate\.php$        /security/ssl [R=301,L]
+RewriteRule ^domain\.php$                 /domains [R=301,L]
+RewriteRule ^about-us\.php$               /about [R=301,L]
+RewriteRule ^contact\.php$                /contact [R=301,L]
+RewriteRule ^blog\.php$                   /blog [R=301,L]
+RewriteRule ^privacy-policy\.php$         /legal/privacy [R=301,L]
+RewriteRule ^terms-and-conditions\.php$   /legal/terms [R=301,L]
+RewriteRule ^refund-policy\.php$          /legal/agreement [R=301,L]
+RewriteRule ^developer-friendly\.php$     /hosting/web [R=301,L]
+RewriteRule ^future-element\.php$         / [R=301,L]
+RewriteRule ^website-design\.php$         / [R=301,L]
+RewriteRule ^comingsoon\.php$             / [R=301,L]
+RewriteRule ^offers\.php$                 / [R=301,L]
+
+# ── /store/group-slug → Next.js product pages (group landing pages only) ───
+# /store/<group-slug>/<product-slug> is left alone — handled by WHMCS fallback
+RewriteRule ^store/wordpress-hosting/?$         /hosting/wordpress [R=301,L]
+RewriteRule ^store/web-hosting/?$               /hosting/web [R=301,L]
+RewriteRule ^store/cloud-vps/?$                 /hosting/vps [R=301,L]
+RewriteRule ^store/virtual-private-servers/?$   /hosting/vps [R=301,L]
+RewriteRule ^store/reseller-hosting/?$          /hosting/reseller [R=301,L]
+RewriteRule ^store/business-email/?$            /email [R=301,L]
+RewriteRule ^store/premium-ssl-certificates/?$  /security/ssl [R=301,L]
+RewriteRule ^store/oneweb-guard/?$              /security/ssl [R=301,L]
+
+# ── Next.js static assets ─────────────────────────────────────────────
+RewriteRule ^_next/(.*)$  http://127.0.0.1:3001/_next/$1 [P,L]
+RewriteRule ^assets/(.*)$ http://127.0.0.1:3001/assets/$1 [P,L]
+
+# ── Next.js app pages (proxy) ─────────────────────────────────────────
+RewriteRule ^hosting(/.*)?$       http://127.0.0.1:3001/hosting$1 [P,L]
+RewriteRule ^email(/.*)?$         http://127.0.0.1:3001/email$1 [P,L]
+RewriteRule ^domains(/.*)?$       http://127.0.0.1:3001/domains$1 [P,L]
+RewriteRule ^security(/.*)?$      http://127.0.0.1:3001/security$1 [P,L]
+RewriteRule ^blog(/.*)?$          http://127.0.0.1:3001/blog$1 [P,L]
+RewriteRule ^about$               http://127.0.0.1:3001/about [P,L]
+RewriteRule ^contact$             http://127.0.0.1:3001/contact [P,L]
+RewriteRule ^community$           http://127.0.0.1:3001/community [P,L]
+RewriteRule ^digital-identity$    http://127.0.0.1:3001/digital-identity [P,L]
+RewriteRule ^legal(/.*)?$         http://127.0.0.1:3001/legal$1 [P,L]
+
+# ── Homepage → Next.js ────────────────────────────────────────────────
+RewriteRule ^$  http://127.0.0.1:3001/ [P,L]
+
+# ── WHMCS 9 SEO URL fallback ──────────────────────────────────────────
+# Pass all remaining non-file, non-dir requests to index.php
+# WHMCS 9 reads REQUEST_URI directly for routing when SEO URLs are on
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^(.+[^/])$  $1/ [R,L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$  index.php [L,QSA]
+
+</IfModule>
+
+# ── HTTP Basic Auth (staging protection) ─────────────────────────────
+<FilesMatch "^(?!deploy\.php$)">
+  AuthName "Staging Environment"
+  AuthGroupFile /dev/null
+  AuthType Basic
+  AuthUserFile /home/onenetse2/domains/staging.onenetservers.net/.htpasswd/public_html/.htpasswd
+  Require valid-user
+  ErrorDocument 401 "Unauthorized Access"
+</FilesMatch>

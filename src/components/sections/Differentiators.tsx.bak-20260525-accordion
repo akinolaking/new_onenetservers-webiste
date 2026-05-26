@@ -1,0 +1,149 @@
+"use client";
+
+import dynamic from "next/dynamic";
+import { Fade } from "@/components/animate-ui/primitives/effects/fade";
+import { differentiators } from "@/lib/home-data";
+import { SectionHeader } from "@/components/shared/SectionHeader";
+import Link from "next/link";
+
+const DotLottieReact = dynamic(
+  () => import("@lottiefiles/dotlottie-react").then((m) => m.DotLottieReact),
+  { ssr: false },
+);
+
+/* Lottie for large cards only */
+const lottieSrc: Record<string, string> = {
+  gift:       "/assets/lottie/w51pcehl.json",
+  itana:      "/assets/lottie/jcikwtux.json",
+  technation: "/assets/lottie/jcikwtux.json",
+};
+
+/* ── Icon map — SVG per key ── */
+const iconMap: Record<string, React.ReactNode> = {
+  gift: (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <polyline points="20 12 20 22 4 22 4 12" />
+      <rect x="2" y="7" width="20" height="5" />
+      <line x1="12" y1="22" x2="12" y2="7" />
+      <path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z" />
+      <path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z" />
+    </svg>
+  ),
+  naira: (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M6 3v18M18 3v18M6 9h12M6 15h12" />
+    </svg>
+  ),
+  shield: (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+      <polyline points="9 12 11 14 15 10" />
+    </svg>
+  ),
+  itana: (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="10" />
+      <line x1="2" y1="12" x2="22" y2="12" />
+      <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+      <circle cx="12" cy="8" r="1.5" fill="currentColor" stroke="none" />
+    </svg>
+  ),
+  technation: (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+    </svg>
+  ),
+  support: (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+    </svg>
+  ),
+  globe: (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="10" />
+      <line x1="2" y1="12" x2="22" y2="12" />
+      <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+    </svg>
+  ),
+};
+
+/* Accent colours per card type */
+const accentMap: Record<string, { bg: string; color: string }> = {
+  gift:       { bg: "#f0fdf4", color: "#10b981" },
+  naira:      { bg: "#fffbeb", color: "#d97706" },
+  shield:     { bg: "#eff6ff", color: "#3b82f6" },
+  itana:      { bg: "#f5f3ff", color: "#7c3aed" },
+  technation: { bg: "#fff1f2", color: "#e11d48" },
+  support:    { bg: "#f0f9ff", color: "#0284c7" },
+  globe:      { bg: "#ecfdf5", color: "#059669" },
+};
+
+export function Differentiators() {
+  return (
+    <section className="diff-section homepage-section" id="why">
+      <div className="shell">
+        <SectionHeader
+          eyebrow="Why OneNet Servers"
+          title="Reasons founders choose us."
+          lead="Every claim is specific. None of them are vague."
+          centered
+        />
+
+        <div className="diff-masonry" role="list">
+          {differentiators.map((item, i) => {
+            const accent = accentMap[item.icon] ?? { bg: "var(--blue-xl)", color: "var(--blue)" };
+            const isLarge = item.size === "large";
+            return (
+              <Fade
+                key={item.icon}
+                inView
+                inViewOnce
+                delay={i * 80}
+                className={isLarge ? "diff-cell diff-cell--large" : "diff-cell"}
+              >
+                <article
+                  className={`diff-mcard${isLarge ? " diff-mcard--large" : ""}`}
+                  role="listitem"
+                >
+                  <div className="diff-mcard__top">
+                    <div
+                      className="diff-mcard__icon"
+                      style={{ background: accent.bg, color: accent.color }}
+                      aria-hidden="true"
+                    >
+                      {iconMap[item.icon]}
+                    </div>
+                    <div className="diff-mcard__tag">{item.tag}</div>
+                  </div>
+                  <h3 className="diff-mcard__headline">{item.headline}</h3>
+                  <p className="diff-mcard__body">{item.body}</p>
+                  {isLarge && lottieSrc[item.icon] && (
+                    <div className="diff-mcard__lottie" aria-hidden="true">
+                      <DotLottieReact
+                        src={lottieSrc[item.icon]}
+                        loop
+                        autoplay
+                        className="diff-lottie"
+                      />
+                    </div>
+                  )}
+                </article>
+              </Fade>
+            );
+          })}
+        </div>
+
+        <Fade inView inViewOnce delay={700}>
+          <div className="diff-cta-row">
+            <Link href="/pricing?category=web-hosting&billing=annual" className="diff-cta-btn diff-cta-btn--primary">
+              Get started free
+            </Link>
+            <Link href="/digital-identity" className="diff-cta-btn diff-cta-btn--ghost">
+              Digital Identity Initiative →
+            </Link>
+          </div>
+        </Fade>
+      </div>
+    </section>
+  );
+}

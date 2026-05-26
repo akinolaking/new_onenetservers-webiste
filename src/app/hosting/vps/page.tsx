@@ -1,0 +1,367 @@
+"use client";
+
+import { useState } from "react";
+import { ArrowRight, Check, Terminal, Cpu, Zap, Shield, Globe, Package } from "lucide-react";
+import { SectionHeader } from "@/components/shared/SectionHeader";
+import { FeaturedPricingWrapper } from "@/components/shared/FeaturedPricingWrapper";
+import { BillingToggle } from "@/components/shared/BillingToggle";
+import { useCurrency } from "@/lib/currency-context";
+import { buildCartAddUrl } from "@/lib/whmcs";
+import { Fade } from "@/components/animate-ui/primitives/effects/fade";
+import { Slides } from "@/components/animate-ui/primitives/effects/slide";
+import { Tilt, TiltContent } from "@/components/animate-ui/primitives/effects/tilt";
+
+/* ── Pricing data — live from WHMCS ────────────────────────── */
+const plans = [
+  {
+    name: "VPS Starter",
+    audience: "Apps and automation",
+    ram: "8GB",
+    cpu: "4 vCPU",
+    storage: "100 GB NVMe",
+    bandwidth: "Unlimited",
+    monthly: { usd: 12.42, ngn: 1000,   gbp: 9.12  },
+    annual:  { usd: 11.18, ngn: 15243,  gbp: 8.21  },
+    renewal: "Renews at $12.42/mo after the first term.",
+    features: [
+      "8 GB RAM · 4 vCPU",
+      "100 GB NVMe SSD",
+      "Unlimited bandwidth",
+      "One-click app deploy",
+      "Docker + Wireguard ready",
+    ],
+    pid: "205",
+    featured: false,
+  },
+  {
+    name: "VPS Lite",
+    audience: "Growing workloads",
+    ram: "16GB",
+    cpu: "6 vCPU",
+    storage: "200 GB NVMe",
+    bandwidth: "Unlimited",
+    monthly: { usd: 29.11, ngn: 39699,  gbp: 21.37 },
+    annual:  { usd: 26.20, ngn: 35729,  gbp: 19.24 },
+    renewal: "Renews at $29.11/mo after the first term.",
+    features: [
+      "16 GB RAM · 6 vCPU",
+      "200 GB NVMe SSD",
+      "Unlimited bandwidth",
+      "Full root access",
+      "KVM virtualisation",
+    ],
+    pid: "264",
+    featured: false,
+  },
+  {
+    name: "VPS Premium",
+    audience: "AI workloads and agencies",
+    ram: "48GB",
+    cpu: "12 vCPU",
+    storage: "400 GB NVMe",
+    bandwidth: "Unlimited",
+    monthly: { usd: 43.61, ngn: 59474,  gbp: 32.03 },
+    annual:  { usd: 39.25, ngn: 53527,  gbp: 28.83 },
+    renewal: "Renews at $43.61/mo after the first term.",
+    features: [
+      "48 GB RAM · 12 vCPU",
+      "400 GB NVMe SSD",
+      "Unlimited bandwidth",
+      "Priority support",
+      "AI-ready from day one",
+    ],
+    pid: "265",
+    featured: true,
+  },
+  {
+    name: "VPS Ultimate",
+    audience: "Enterprise infrastructure",
+    ram: "96GB",
+    cpu: "24 vCPU",
+    storage: "800 GB NVMe",
+    bandwidth: "Unlimited",
+    monthly: { usd: 92.15,  ngn: 125671, gbp: 67.68 },
+    annual:  { usd: 82.94,  ngn: 113104, gbp: 60.91 },
+    renewal: "Renews at $92.15/mo after the first term.",
+    features: [
+      "96 GB RAM · 24 vCPU",
+      "800 GB NVMe SSD",
+      "Unlimited bandwidth",
+      "Dedicated resources",
+      "SLA-backed uptime",
+    ],
+    pid: "266",
+    featured: false,
+  },
+];
+
+const oneClickApps = [
+  "Docker", "n8n", "Nextcloud", "Wireguard", "WordPress",
+  "Ghost", "Grafana", "Mattermost", "Portainer", "Uptime Kuma",
+];
+
+const features = [
+  {
+    icon: Terminal,
+    title: "Full root access",
+    description: "Your server. Your rules. SSH in, install anything, configure as needed. No restrictions on what you run.",
+    bg: "var(--blue-xl)",
+    color: "var(--blue)",
+  },
+  {
+    icon: Zap,
+    title: "Unlimited bandwidth",
+    description: "We do not throttle, cap, or charge overage. Deploy bandwidth-intensive apps without watching a counter.",
+    bg: "rgb(16 185 129 / 12%)",
+    color: "var(--green)",
+  },
+  {
+    icon: Package,
+    title: "One-click app deploy",
+    description: "Docker, n8n, Nextcloud, Wireguard, and more, deployed in under a minute from the client area.",
+    bg: "rgb(245 158 11 / 10%)",
+    color: "var(--amber)",
+  },
+  {
+    icon: Cpu,
+    title: "KVM virtualisation",
+    description: "Dedicated virtual CPU cores. No noisy neighbours competing for compute. Your allocated resources are yours.",
+    bg: "var(--blue-xl)",
+    color: "var(--blue)",
+  },
+  {
+    icon: Globe,
+    title: "9 regions worldwide",
+    description: "Deploy in Europe, US, Asia, Africa, or Oceania. Move between regions without losing your data.",
+    bg: "rgb(16 185 129 / 12%)",
+    color: "var(--green)",
+  },
+  {
+    icon: Shield,
+    title: "DDoS protection included",
+    description: "Enterprise-grade mitigation at the network edge. Your server stays responsive even under attack.",
+    bg: "rgb(245 158 11 / 10%)",
+    color: "var(--amber)",
+  },
+];
+
+const faqs = [
+  {
+    q: "What operating systems are available?",
+    a: "Ubuntu 20.04, 22.04, Debian 11, 12, CentOS 7, 8, AlmaLinux 8, 9, and Rocky Linux 8, 9. You can reinstall from any supported OS at any time from your client area. Custom ISOs are available on Enterprise plans.",
+  },
+  {
+    q: "What does 'unlimited bandwidth' actually mean?",
+    a: "No data cap, no throttle, no overage charge. You are allocated a shared port (typically 1 Gbps) with no monthly transfer limits. We do not bill for outbound bandwidth.",
+  },
+  {
+    q: "Can I upgrade later?",
+    a: "Yes, upgrade to a larger plan at any time from your client area. The new resources apply at the next billing cycle. Downgrade is also available, subject to data fitting within the smaller storage allocation.",
+  },
+  {
+    q: "Is a managed VPS available?",
+    a: "Our VPS plans are unmanaged by default, giving you full control. Managed add-ons (server monitoring, patching, backup management) are available from the client area. Our support team is available 24/7 for infrastructure questions.",
+  },
+  {
+    q: "Can I run AI or machine learning workloads?",
+    a: "Yes. VPS Premium and Ultimate are well-suited for AI inference, data pipelines, and model serving with sufficient RAM. For GPU-intensive training workloads, ask our team about dedicated GPU server options.",
+  },
+];
+
+export default function VpsPage() {
+  const [billing, setBilling] = useState<"monthly" | "annual">("annual");
+  const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const { currency } = useCurrency();
+
+  function showPrice(p: { usd: number; ngn: number; gbp: number }) {
+    if (currency === "NGN") return `₦${Math.round(p.ngn).toLocaleString("en-US")}`;
+    if (currency === "GBP") return `£${p.gbp.toFixed(2)}`;
+    return `$${p.usd.toFixed(2)}`;
+  }
+
+  return (
+    <main className="page-shell hosting-page hosting-vps-page">
+      {/* ── Hero ── */}
+      <section className="wh-hero">
+        <div className="shell">
+          <Fade inView inViewOnce className="wh-hero__inner">
+            <div className="wh-trust-strip">
+              <Slides inView inViewOnce direction="up" holdDelay={60}>
+                {["KVM VPS", "Unlimited Bandwidth", "Full Root Access", "9 Regions", "One-click Apps"].map((item) => (
+                  <span key={item} className="wh-trust-badge">{item}</span>
+                ))}
+              </Slides>
+            </div>
+            <h1>Full power. Zero bandwidth limits.</h1>
+            <p className="hero-sub">
+              Root access, unlimited bandwidth, and one-click deploys for Docker, n8n, Nextcloud,
+              and Wireguard, from {showPrice(plans[0].monthly)}/mo.
+            </p>
+            <div className="hero-actions">
+              <a href={buildCartAddUrl((plans.find((plan) => plan.featured) ?? plans[0]).pid, billing, currency)} className="wh-btn-primary">
+                Deploy your VPS <ArrowRight size={16} />
+              </a>
+            </div>
+            <div className="hero-reassurance">
+              <span>30-day money-back</span>
+              <span>Live in 60 seconds</span>
+              <span>No bandwidth caps</span>
+            </div>
+          </Fade>
+        </div>
+      </section>
+
+      {/* ── One-click apps ── */}
+      <section className="homepage-section">
+        <div className="shell">
+          <Fade inView inViewOnce>
+            <div className="vps-apps-row">
+              <p className="vps-apps-label">One-click deploy:</p>
+              <div className="vps-apps-chips">
+                {oneClickApps.map((app) => (
+                  <span key={app} className="vps-app-chip">{app}</span>
+                ))}
+              </div>
+            </div>
+          </Fade>
+        </div>
+      </section>
+
+      {/* ── Pricing ── */}
+      <section className="homepage-section homepage-section--tinted" id="plans">
+        <div className="shell">
+          <SectionHeader
+            eyebrow="Pricing"
+            title="Scale up when you need to."
+            lead="All plans include unlimited bandwidth, KVM virtualisation, and a 30-day money-back guarantee."
+            centered
+          />
+          <BillingToggle billing={billing} onChange={setBilling} savingsText="Save up to 35% · +2 months free" />
+
+          <div className="pricing-grid wh-pricing-grid">
+            <Slides inView inViewOnce direction="up" holdDelay={80}>
+              {plans.map((plan) =>
+                plan.featured ? (
+                  <FeaturedPricingWrapper key={plan.name}>
+                    <div className="pricing-card pricing-card--featured pricing-card--mui-inner">
+                      <div>
+                        <h3>{plan.name}</h3>
+                        <p>{plan.audience}</p>
+                      </div>
+                      <div className="pricing-card__price">
+                        <strong>{showPrice(billing === "annual" ? plan.annual : plan.monthly)}</strong>
+                        <span>{billing === "annual" ? "/mo billed annually" : "/mo"}</span>
+                      </div>
+                      <p className="pricing-card__renewal">{plan.renewal}</p>
+                      <ul className="wh-features-list">
+                        {plan.features.map((f) => (
+                          <li key={f}><Check size={14} className="wh-check-icon" />{f}</li>
+                        ))}
+                        <li><Check size={14} className="wh-check-icon" /><span className="wh-mbg-badge">30-day MBG</span></li>
+                      </ul>
+                      <a href={buildCartAddUrl(plan.pid, billing, currency)} className="wh-card-cta wh-card-cta--featured">
+                        Deploy VPS
+                      </a>
+                    </div>
+                  </FeaturedPricingWrapper>
+                ) : (
+                  <div key={plan.name} className="pricing-card">
+                    <div>
+                      <h3>{plan.name}</h3>
+                      <p>{plan.audience}</p>
+                    </div>
+                    <div className="pricing-card__price">
+                      <strong>{showPrice(billing === "annual" ? plan.annual : plan.monthly)}</strong>
+                      <span>{billing === "annual" ? "/mo billed annually" : "/mo"}</span>
+                    </div>
+                    <p className="pricing-card__renewal">{plan.renewal}</p>
+                    <ul className="wh-features-list">
+                      {plan.features.map((f) => (
+                        <li key={f}><Check size={14} className="wh-check-icon" />{f}</li>
+                      ))}
+                      <li><Check size={14} className="wh-check-icon" /><span className="wh-mbg-badge">30-day MBG</span></li>
+                    </ul>
+                    <a href={buildCartAddUrl(plan.pid, billing, currency)} className="wh-card-cta">
+                      Deploy VPS
+                    </a>
+                  </div>
+                )
+              )}
+            </Slides>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Features ── */}
+      <section className="homepage-section">
+        <div className="shell">
+          <SectionHeader eyebrow="What you get" title="Built for builders who know what they need." centered />
+          <div className="wh-features-grid">
+            <Slides inView inViewOnce direction="up" holdDelay={70}>
+              {features.map((feat) => {
+                const Icon = feat.icon;
+                return (
+                  <Tilt key={feat.title}>
+                    <TiltContent>
+                      <div className="wh-feature-card">
+                        <div className="wh-feature-icon" style={{ background: feat.bg, color: feat.color }}>
+                          <Icon size={20} />
+                        </div>
+                        <h3>{feat.title}</h3>
+                        <p>{feat.description}</p>
+                      </div>
+                    </TiltContent>
+                  </Tilt>
+                );
+              })}
+            </Slides>
+          </div>
+        </div>
+      </section>
+
+      {/* ── FAQ ── */}
+      <section className="homepage-section homepage-section--tinted">
+        <div className="shell">
+          <SectionHeader eyebrow="Questions" title="VPS questions answered." centered />
+          <Fade inView inViewOnce>
+            <div className="wh-faq-list">
+              {faqs.map((faq, i) => (
+                <div key={i} className={`wh-faq-item${openFaq === i ? " wh-faq-item--open" : ""}`}>
+                  <button
+                    className="wh-faq-trigger"
+                    onClick={() => setOpenFaq(openFaq === i ? null : i)}
+                    aria-expanded={openFaq === i}
+                  >
+                    {faq.q}
+                    <span className="wh-faq-chevron" aria-hidden="true">{openFaq === i ? "−" : "+"}</span>
+                  </button>
+                  {openFaq === i && <div className="wh-faq-answer"><p>{faq.a}</p></div>}
+                </div>
+              ))}
+            </div>
+          </Fade>
+        </div>
+      </section>
+
+      {/* ── CTA ── */}
+      <section className="homepage-section wh-cta-section">
+        <div className="shell">
+          <Fade inView inViewOnce>
+            <div className="wh-cta-box">
+              <h2>Deploy in 60 seconds. Own your infrastructure.</h2>
+              <p>30-day money-back guarantee. Unlimited bandwidth. Full root access.</p>
+              <a href={buildCartAddUrl((plans.find((plan) => plan.featured) ?? plans[0]).pid, billing, currency)} className="wh-btn-primary">
+                Deploy your VPS <ArrowRight size={16} />
+              </a>
+              <div className="hero-reassurance">
+                <span>30-day money-back</span>
+                <span>No bandwidth caps</span>
+                <span>9 global regions</span>
+              </div>
+            </div>
+          </Fade>
+        </div>
+      </section>
+    </main>
+  );
+}

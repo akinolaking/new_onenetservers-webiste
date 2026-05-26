@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 72" width="220" height="72" role="img" aria-label="Verve">
+  <!-- Red circle base -->
+  <circle cx="36" cy="36" r="36" fill="#E52222"/>
+  <!-- White V inside circle -->
+  <path d="M14 14 L36 52 L58 14 H46 L36 36 L26 14 Z" fill="#fff"/>
+  <!-- Bite: smaller white circle cutting into the red circle on the right -->
+  <circle cx="62" cy="36" r="18" fill="#fff" opacity="0.95"/>
+  <!-- VERVE wordmark -->
+  <text x="82" y="50" font-family="'Helvetica Neue',Arial,sans-serif" font-size="38" font-weight="800" fill="#fff" letter-spacing="1">VERVE</text>
+</svg>

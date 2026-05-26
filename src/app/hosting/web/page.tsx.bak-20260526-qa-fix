@@ -1,0 +1,816 @@
+"use client";
+
+import Image from "next/image";
+import { useState } from "react";
+import {
+  ArrowRight,
+  Bot,
+  Check,
+  Cpu,
+  Gauge,
+  Globe,
+  Headset,
+  LayoutTemplate,
+  Lock,
+  MousePointer2,
+  PenSquare,
+  RefreshCw,
+  Rocket,
+  Server,
+  Shield,
+  Sparkles,
+  Zap,
+} from "lucide-react";
+import { SectionHeader } from "@/components/shared/SectionHeader";
+import { FeaturedPricingWrapper } from "@/components/shared/FeaturedPricingWrapper";
+import { BillingToggle } from "@/components/shared/BillingToggle";
+import { useCurrency } from "@/lib/currency-context";
+import { buildCartAddUrl } from "@/lib/whmcs";
+import { Fade } from "@/components/animate-ui/primitives/effects/fade";
+import { Slides } from "@/components/animate-ui/primitives/effects/slide";
+
+const plans = [
+  {
+    name: "Starter",
+    audience: "Your first website",
+    monthly: { usd: 3.99, ngn: 5499, gbp: 2.79 },
+    annual: { usd: 4.05, ngn: 4157, gbp: 3.0 },
+    renewalMonthly: "Renews at $3.99/mo after the first term.",
+    renewalAnnual: "Renews at $3.99/mo after the first term.",
+    features: [
+      "1 website",
+      "5 GB SSD storage",
+      "Free SSL certificate",
+      "Free daily backups",
+      "CloudLinux isolation",
+    ],
+    pid: "261",
+    featured: false,
+  },
+  {
+    name: "Lite",
+    audience: "Growing sites",
+    monthly: { usd: 9.75, ngn: 7499, gbp: 6.97 },
+    annual: { usd: 6.82, ngn: 5249, gbp: 4.88 },
+    renewalMonthly: "Renews at $9.75/mo after the first term.",
+    renewalAnnual: "Renews at $9.75/mo after the first term.",
+    features: [
+      "3 websites",
+      "20 GB SSD storage",
+      "Free SSL certificate",
+      "Free daily backups",
+      "LiteSpeed web server",
+    ],
+    pid: "251",
+    featured: false,
+  },
+  {
+    name: "Premium",
+    audience: "Serious builders",
+    monthly: { usd: 18.2, ngn: 13999, gbp: 13.02 },
+    annual: { usd: 12.74, ngn: 9799, gbp: 9.11 },
+    renewalMonthly: "Renews at $18.20/mo after the first term.",
+    renewalAnnual: "Renews at $18.20/mo after the first term.",
+    features: [
+      "Unlimited websites",
+      "50 GB SSD storage",
+      "Free SSL certificate",
+      "Free daily backups",
+      "ImmunifyAV+ malware scanning",
+    ],
+    pid: "252",
+    featured: true,
+  },
+  {
+    name: "Ultimate",
+    audience: "Agencies and stores",
+    monthly: { usd: 32.5, ngn: 24999, gbp: 23.25 },
+    annual: { usd: 22.75, ngn: 17499, gbp: 16.28 },
+    renewalMonthly: "Renews at $32.50/mo after the first term.",
+    renewalAnnual: "Renews at $32.50/mo after the first term.",
+    features: [
+      "Unlimited websites",
+      "100 GB SSD storage",
+      "Free SSL certificate",
+      "Priority daily backups",
+      "Dedicated resources",
+    ],
+    pid: "254",
+    featured: false,
+  },
+];
+
+const heroHighlights = [
+  { icon: Sparkles, label: "AI website builder included" },
+  { icon: Zap, label: "LiteSpeed for faster page delivery" },
+  { icon: Shield, label: "Free SSL, backups, and malware scanning" },
+  { icon: Headset, label: "Migration and support from real humans" },
+];
+
+const reasons = [
+  {
+    title: "One account. Fewer moving parts.",
+    description:
+      "Hosting, domain, SSL, business email, and your site builder stay inside one flow, so launch day does not become five different vendor logins.",
+    meta: "Built for first launches and growing teams",
+    image: "/assets/website-cover.png",
+    alt: "OneNet Servers website builder preview",
+  },
+  {
+    title: "Performance that does not need babysitting.",
+    description:
+      "LiteSpeed, CloudLinux isolation, and daily backups keep your site fast and recoverable without extra plugins or server tuning on day one.",
+    meta: "LiteSpeed, backups, and isolated resources",
+    image: "/assets/hero-lagos.jpg",
+    alt: "OneNet Servers hosting environment preview",
+  },
+  {
+    title: "Support that understands the launch window.",
+    description:
+      "Our team handles migrations, DNS handoff, and setup questions fast, so you spend your first week publishing instead of troubleshooting.",
+    meta: "Migration help and setup guidance included",
+    image: "/assets/hero-operator.jpg",
+    alt: "OneNet Servers operator supporting customers",
+  },
+];
+
+const builderFeatures = [
+  { icon: MousePointer2, label: "Drag-and-drop visual editor" },
+  { icon: Bot, label: "AI website and content generation" },
+  { icon: Gauge, label: "Built-in SEO and performance tools" },
+  { icon: Server, label: "Hosting, SSL, and commerce ready" },
+];
+
+const aiSteps = [
+  {
+    number: "STEP 1",
+    title: "Describe your website",
+    description:
+      "Tell the builder what you do, who you serve, and the kind of look you want. It turns that input into a usable first draft.",
+    prompt: "What industry is your business in?",
+    helper: "Coaching, photography, catering, consulting",
+    action: "Next",
+  },
+  {
+    number: "STEP 2",
+    title: "AI builds the first version",
+    description:
+      "Pages, section structure, draft copy, and layout are generated instantly, giving you something solid to refine instead of a blank canvas.",
+    prompt: "Generating your first layout",
+    helper: "Pages, sections, and starter copy are being prepared",
+    action: "Creating layout...",
+  },
+  {
+    number: "STEP 3",
+    title: "Edit and publish with full control",
+    description:
+      "Adjust content, design, SEO, and structure visually. Nothing is locked, and you can publish as soon as the site feels right.",
+    prompt: "Choose colors",
+    helper: "Brand palette, spacing, and layout blocks stay editable",
+    action: "Publish site",
+  },
+];
+
+const comparison = [
+  {
+    feature: "AI website builder included",
+    onenet: true,
+    ukHost: false,
+    ngHost: false,
+    globalHost: false,
+  },
+  {
+    feature: "LiteSpeed on shared hosting",
+    onenet: true,
+    ukHost: false,
+    ngHost: false,
+    globalHost: false,
+  },
+  {
+    feature: "Free daily backups",
+    onenet: true,
+    ukHost: true,
+    ngHost: false,
+    globalHost: true,
+  },
+  {
+    feature: "Free migration support",
+    onenet: true,
+    ukHost: true,
+    ngHost: false,
+    globalHost: false,
+  },
+  {
+    feature: "Domain, SSL, and email-ready setup",
+    onenet: true,
+    ukHost: false,
+    ngHost: false,
+    globalHost: true,
+  },
+  {
+    feature: "UK and Nigeria business context",
+    onenet: true,
+    ukHost: false,
+    ngHost: true,
+    globalHost: false,
+  },
+];
+
+const faqs = [
+  {
+    q: "Is the AI website builder included with hosting?",
+    a: "Yes. Every shared hosting plan includes access to the AI website builder, ready-made templates, and the visual editor, so you can launch without adding another builder subscription.",
+  },
+  {
+    q: "Can you migrate my existing website for me?",
+    a: "Yes. Our team handles files, databases, DNS, and email migration for shared hosting customers at no extra charge. Most standard moves are completed within 24 hours.",
+  },
+  {
+    q: "What happens after the introductory term?",
+    a: "The renewal price is shown on every plan card before checkout. Your service renews at that standard rate unless you upgrade, downgrade, or cancel from your client area.",
+  },
+  {
+    q: "Do I still get cPanel and WordPress tools?",
+    a: "Yes. Shared hosting plans include cPanel for file, email, and database management, plus one-click WordPress installs and support for regular PHP and CMS workflows.",
+  },
+  {
+    q: "Which plan is best if I want to launch quickly?",
+    a: "Starter is enough for a single simple site, while Lite is a better fit if you want more storage, more sites, and extra room to grow without migrating again too soon.",
+  },
+];
+
+const testimonials = [
+  {
+    name: "Adebola O.",
+    role: "E-commerce founder",
+    location: "Lagos",
+    quote:
+      "We moved from a slower international host and the difference was immediate. The migration was handled for us and we launched updates the same week.",
+  },
+  {
+    name: "The BB Bespokes",
+    role: "Fashion brand",
+    location: "London",
+    quote:
+      "Going from DMs to a proper storefront felt less intimidating because the design tools were already bundled with the hosting.",
+  },
+  {
+    name: "Emeka Tax Advisory",
+    role: "Professional services",
+    location: "Abuja",
+    quote:
+      "It gave us the speed of a real launch without the usual setup chaos. Domain, email, and hosting all came together cleanly.",
+  },
+];
+
+function CheckCell({ value }: { value: boolean | string }) {
+  if (typeof value === "string") {
+    return <span className="wh-table-value">{value}</span>;
+  }
+
+  return value ? (
+    <span className="wh-table-check wh-table-check--yes" aria-label="Yes">
+      ✓
+    </span>
+  ) : (
+    <span className="wh-table-check wh-table-check--no" aria-label="No">
+      ✗
+    </span>
+  );
+}
+
+export default function WebHostingPage() {
+  const [billing, setBilling] = useState<"monthly" | "annual">("annual");
+  const [openFaq, setOpenFaq] = useState<number | null>(0);
+  const { currency } = useCurrency();
+
+  const featuredPlan = plans.find((plan) => plan.featured) ?? plans[0];
+  const starterPlan = plans[0];
+
+  function showPrice(p: { usd: number; ngn: number; gbp: number }) {
+    if (currency === "NGN") return `₦${Math.round(p.ngn).toLocaleString("en-US")}`;
+    if (currency === "GBP") return `£${p.gbp.toFixed(2)}`;
+    return `$${p.usd.toFixed(2)}`;
+  }
+
+  return (
+    <main className="page-shell hosting-page hosting-web-page">
+      <section className="wh-web-hero">
+        <div className="shell">
+          <div className="wh-web-hero__grid">
+            <Fade inView inViewOnce className="wh-web-hero__copy">
+              <span className="wh-web-chip">Web Hosting • AI Builder • Free Migration</span>
+              <h1>High-performance hosting for websites that need to look serious from day one.</h1>
+              <p className="wh-web-hero__lead">
+                Launch with LiteSpeed hosting, CloudLinux isolation, daily backups, and an AI website builder
+                already bundled into the plan. One stack. Less setup drag.
+              </p>
+              <div className="wh-web-hero__actions">
+                <a href="#view" className="wh-btn-primary">
+                  View plans <ArrowRight size={16} />
+                </a>
+                <a
+                  href={buildCartAddUrl(featuredPlan.pid, billing, currency)}
+                  className="wh-btn-secondary"
+                >
+                  Start with Premium
+                </a>
+              </div>
+              <p className="wh-web-hero__price">
+                Starting at <strong>{showPrice(starterPlan.annual)}</strong>
+                <span>/mo billed annually</span>
+                <em>{showPrice(starterPlan.monthly)}/mo standard</em>
+              </p>
+            </Fade>
+
+            <Fade inView inViewOnce delay={0.08} className="wh-web-hero__visual">
+              <div className="wh-web-hero__artboard">
+                <div className="wh-web-hero__main-shot">
+                  <Image
+                    src="/assets/website-cover.png"
+                    alt="Website preview built on OneNet Servers"
+                    fill
+                    sizes="(max-width: 900px) 100vw, 560px"
+                  />
+                </div>
+                <div className="wh-web-hero__portrait">
+                  <Image
+                    src="/assets/hero-operator.jpg"
+                    alt="OneNet Servers customer support and setup operator"
+                    fill
+                    sizes="(max-width: 900px) 60vw, 260px"
+                  />
+                </div>
+                <div className="wh-web-hero__panel">
+                  <Image
+                    src="/assets/email-mockup.png"
+                    alt="OneNet Servers site setup control panel preview"
+                    fill
+                    sizes="(max-width: 900px) 60vw, 300px"
+                  />
+                </div>
+                <div className="wh-web-hero__float wh-web-hero__float--top">AI builder included</div>
+                <div className="wh-web-hero__float wh-web-hero__float--bottom">Free migration and SSL</div>
+              </div>
+            </Fade>
+          </div>
+
+          <ul className="wh-web-hero__highlights" aria-label="Hosting highlights">
+            <Slides inView inViewOnce direction="up" holdDelay={70}>
+              {heroHighlights.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <li key={item.label} className="wh-web-hero__highlight">
+                    <span className="wh-web-hero__highlight-icon">
+                      <Icon size={18} aria-hidden="true" />
+                    </span>
+                    <span>{item.label}</span>
+                  </li>
+                );
+              })}
+            </Slides>
+          </ul>
+        </div>
+      </section>
+
+      <section className="homepage-section">
+        <div className="shell">
+          <SectionHeader
+            eyebrow="Why OneNet Servers"
+            title="Hosting that gives founders fewer moving parts."
+            lead="The point is not just server space. It is getting your site live with less friction, fewer tools, and support that understands launch windows."
+            centered
+          />
+
+          <div className="wh-web-reasons">
+            <Slides inView inViewOnce direction="up" holdDelay={90}>
+              {reasons.map((reason) => (
+                <article key={reason.title} className="wh-web-reason-card">
+                  <div className="wh-web-reason-card__media">
+                    <Image
+                      src={reason.image}
+                      alt={reason.alt}
+                      fill
+                      sizes="(max-width: 760px) 100vw, 33vw"
+                    />
+                  </div>
+                  <div className="wh-web-reason-card__body">
+                    <span className="wh-web-reason-card__meta">{reason.meta}</span>
+                    <h3>{reason.title}</h3>
+                    <p>{reason.description}</p>
+                  </div>
+                </article>
+              ))}
+            </Slides>
+          </div>
+        </div>
+      </section>
+
+      <section className="homepage-section wh-web-builder">
+        <div className="shell">
+          <div className="wh-web-builder__grid">
+            <Fade inView inViewOnce className="wh-web-builder__visual">
+              <div className="wh-web-builder__window">
+                <Image
+                  src="/assets/website-cover.png"
+                  alt="OneNet Servers AI website builder preview"
+                  fill
+                  sizes="(max-width: 900px) 100vw, 560px"
+                />
+              </div>
+              <div className="wh-web-builder__overlay">
+                <Image
+                  src="/assets/email-mockup.png"
+                  alt="OneNet Servers builder style controls"
+                  fill
+                  sizes="(max-width: 900px) 70vw, 320px"
+                />
+              </div>
+            </Fade>
+
+            <Fade inView inViewOnce delay={0.08} className="wh-web-builder__copy">
+              <span className="wh-web-chip wh-web-chip--light">OneNet AI Website Builder</span>
+              <h2>Build your website with confidence</h2>
+              <p>
+                Launch a professional website on OneNet Servers using ready-made templates, a visual
+                drag-and-drop editor, and built-in AI assistance. Customize freely and publish without code.
+              </p>
+              <ul className="wh-web-builder__list">
+                {builderFeatures.map((feature) => {
+                  const Icon = feature.icon;
+                  return (
+                    <li key={feature.label}>
+                      <span className="wh-web-builder__list-icon">
+                        <Icon size={18} aria-hidden="true" />
+                      </span>
+                      <span>{feature.label}</span>
+                    </li>
+                  );
+                })}
+              </ul>
+              <div className="wh-web-builder__actions">
+                <a
+                  href={buildCartAddUrl(featuredPlan.pid, billing, currency)}
+                  className="wh-btn-primary"
+                >
+                  Start building with AI <ArrowRight size={16} />
+                </a>
+                <a href="#view" className="wh-btn-secondary wh-btn-secondary--light">
+                  See plans and pricing
+                </a>
+              </div>
+              <p className="wh-web-builder__note">Included free with every Web Hosting plan.</p>
+            </Fade>
+          </div>
+        </div>
+      </section>
+
+      <section className="homepage-section homepage-section--tinted">
+        <div className="shell">
+          <SectionHeader
+            eyebrow="Powered by SiteJet Builder"
+            title="Create websites faster with AI"
+            lead="Available with every OneNet Servers Web Hosting plan. Go from idea to live website in minutes, then refine everything visually."
+            centered
+          />
+
+          <p className="wh-web-steps__kicker">How it works:</p>
+
+          <div className="wh-web-steps">
+            <Slides inView inViewOnce direction="up" holdDelay={85}>
+              {aiSteps.map((step, index) => (
+                <article key={step.number} className="wh-web-step-card">
+                  <span className="wh-web-step-card__eyebrow">{step.number}</span>
+                  <h3>{step.title}</h3>
+                  <p>{step.description}</p>
+                  <div className={`wh-web-step-mock wh-web-step-mock--${index + 1}`}>
+                    <div className="wh-web-step-mock__bar">
+                      <span />
+                      <span />
+                      <span />
+                    </div>
+                    <div className="wh-web-step-mock__body">
+                      <strong>{step.prompt}</strong>
+                      <p>{step.helper}</p>
+                      <button type="button">{step.action}</button>
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </Slides>
+          </div>
+
+          <div className="wh-web-steps__actions">
+            <a
+              href={buildCartAddUrl(featuredPlan.pid, billing, currency)}
+              className="wh-btn-primary"
+            >
+              Start building free <ArrowRight size={16} />
+            </a>
+            <a href="#view" className="wh-btn-secondary">
+              View hosting plans
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section className="homepage-section" id="view">
+        <div className="shell">
+          <SectionHeader
+            eyebrow="Plans and pricing"
+            title="Pick the plan that fits the site you are launching now."
+            lead="All shared hosting plans include SSL, daily backups, migration support, and the AI builder. Pricing follows the currency selected in the header."
+            centered
+          />
+
+          <BillingToggle billing={billing} onChange={setBilling} savingsText="Save up to 35% on annual billing" />
+
+          <div className="pricing-grid wh-pricing-grid">
+            <Slides inView inViewOnce direction="up" holdDelay={80}>
+              {plans.map((plan) =>
+                plan.featured ? (
+                  <FeaturedPricingWrapper key={plan.name}>
+                    <div className="pricing-card pricing-card--featured pricing-card--mui-inner">
+                      <div>
+                        <h3>{plan.name}</h3>
+                        <p>{plan.audience}</p>
+                      </div>
+                      <div className="pricing-card__price">
+                        <strong>{showPrice(billing === "annual" ? plan.annual : plan.monthly)}</strong>
+                        <span>{billing === "annual" ? "/mo billed annually" : "/mo"}</span>
+                      </div>
+                      <p className="pricing-card__renewal">
+                        {billing === "annual" ? plan.renewalAnnual : plan.renewalMonthly}
+                      </p>
+                      <ul className="wh-features-list">
+                        {plan.features.map((feature) => (
+                          <li key={feature}>
+                            <Check size={14} className="wh-check-icon" />
+                            {feature}
+                          </li>
+                        ))}
+                        <li>
+                          <Check size={14} className="wh-check-icon" />
+                          AI website builder included
+                        </li>
+                      </ul>
+                      <a
+                        href={buildCartAddUrl(plan.pid, billing, currency)}
+                        className="wh-card-cta wh-card-cta--featured"
+                      >
+                        Choose {plan.name}
+                      </a>
+                    </div>
+                  </FeaturedPricingWrapper>
+                ) : (
+                  <div key={plan.name} className="pricing-card">
+                    <div>
+                      <h3>{plan.name}</h3>
+                      <p>{plan.audience}</p>
+                    </div>
+                    <div className="pricing-card__price">
+                      <strong>{showPrice(billing === "annual" ? plan.annual : plan.monthly)}</strong>
+                      <span>{billing === "annual" ? "/mo billed annually" : "/mo"}</span>
+                    </div>
+                    <p className="pricing-card__renewal">
+                      {billing === "annual" ? plan.renewalAnnual : plan.renewalMonthly}
+                    </p>
+                    <ul className="wh-features-list">
+                      {plan.features.map((feature) => (
+                        <li key={feature}>
+                          <Check size={14} className="wh-check-icon" />
+                          {feature}
+                        </li>
+                      ))}
+                      <li>
+                        <Check size={14} className="wh-check-icon" />
+                        AI website builder included
+                      </li>
+                    </ul>
+                    <a
+                      href={buildCartAddUrl(plan.pid, billing, currency)}
+                      className="wh-card-cta"
+                    >
+                      Choose {plan.name}
+                    </a>
+                  </div>
+                ),
+              )}
+            </Slides>
+          </div>
+        </div>
+      </section>
+
+      <section className="homepage-section">
+        <div className="shell">
+          <SectionHeader
+            eyebrow="Hosting features"
+            title="Built for fast launches and cleaner handoffs."
+            lead="The stack covers the basics that usually get left for later: speed, recovery, isolation, and enough tooling to publish without rebuilding your workflow."
+            centered
+          />
+
+          <div className="wh-web-bento">
+            <Fade inView inViewOnce className="wh-web-bento__tile wh-web-bento__tile--image">
+              <div className="wh-web-bento__photo">
+                <Image
+                  src="/assets/hero-london.jpg"
+                  alt="OneNet Servers hosting support and launch environment"
+                  fill
+                  sizes="(max-width: 900px) 100vw, 520px"
+                />
+              </div>
+              <div className="wh-web-bento__badge">LiteSpeed + CloudLinux</div>
+            </Fade>
+
+            <article className="wh-web-bento__tile">
+              <div className="wh-web-bento__icon">
+                <Zap size={20} />
+              </div>
+              <h3>Faster first loads</h3>
+              <p>LiteSpeed caching and modern shared hosting keep the first experience cleaner for visitors and search engines.</p>
+            </article>
+
+            <article className="wh-web-bento__tile">
+              <div className="wh-web-bento__icon">
+                <RefreshCw size={20} />
+              </div>
+              <h3>Daily backups</h3>
+              <p>Your site can be recovered quickly after edits, failed updates, or accidental changes.</p>
+            </article>
+
+            <article className="wh-web-bento__tile">
+              <div className="wh-web-bento__icon">
+                <Lock size={20} />
+              </div>
+              <h3>SSL included</h3>
+              <p>HTTPS is included from the start, without another paid add-on slowing down launch day.</p>
+            </article>
+
+            <article className="wh-web-bento__tile">
+              <div className="wh-web-bento__icon">
+                <Cpu size={20} />
+              </div>
+              <h3>Isolated resources</h3>
+              <p>CloudLinux helps keep other tenants from dragging down your site when their traffic spikes.</p>
+            </article>
+
+            <article className="wh-web-bento__tile wh-web-bento__tile--wide">
+              <div className="wh-web-bento__icon">
+                <Globe size={20} />
+              </div>
+              <h3>Domain, hosting, builder, and email can launch together</h3>
+              <p>
+                That matters when you want a professional website live quickly instead of stitching together a domain registrar,
+                a separate builder, and a third-party email flow.
+              </p>
+            </article>
+
+            <article className="wh-web-bento__tile wh-web-bento__tile--wide">
+              <div className="wh-web-bento__icon">
+                <Headset size={20} />
+              </div>
+              <h3>Migration help when you need a cleaner switch</h3>
+              <p>
+                If you already have a site elsewhere, the team can move the important pieces for you so the redesign does not
+                become another hosting firefight.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section className="homepage-section homepage-section--tinted">
+        <div className="shell">
+          <SectionHeader
+            eyebrow="Compare"
+            title="A cleaner stack than the usual budget-hosting mix."
+            lead="This is where OneNet Servers stands apart: bundled builder access, migration help, and launch-ready essentials already inside the base offer."
+            centered
+          />
+
+          <div className="wh-table-scroll-wrap">
+            <p className="wh-table-scroll-hint">&#8592; Swipe to compare &#8594;</p>
+            <div className="wh-table-inner">
+              <table className="wh-comparison-table">
+                <thead>
+                  <tr>
+                    <th scope="col">Feature</th>
+                    <th scope="col" className="wh-col-onenet">OneNet Servers</th>
+                    <th scope="col">Popular UK Host</th>
+                    <th scope="col">Budget NG Host</th>
+                    <th scope="col">Global Budget Host</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {comparison.map((row) => (
+                    <tr key={row.feature}>
+                      <td>{row.feature}</td>
+                      <td className="wh-col-onenet">
+                        <CheckCell value={row.onenet} />
+                      </td>
+                      <td>
+                        <CheckCell value={row.ukHost} />
+                      </td>
+                      <td>
+                        <CheckCell value={row.ngHost} />
+                      </td>
+                      <td>
+                        <CheckCell value={row.globalHost} />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="homepage-section">
+        <div className="shell">
+          <SectionHeader
+            eyebrow="Customer stories"
+            title="Hosting that feels simpler once the work starts."
+            centered
+          />
+          <div className="wh-testimonials-grid">
+            <Slides inView inViewOnce direction="up" holdDelay={100}>
+              {testimonials.map((testimonial) => (
+                <div key={testimonial.name} className="wh-testimonial-card">
+                  <div className="wh-stars" aria-label="5 out of 5 stars" role="img">
+                    ★★★★★
+                  </div>
+                  <blockquote>&ldquo;{testimonial.quote}&rdquo;</blockquote>
+                  <footer>
+                    <strong>{testimonial.name}</strong>
+                    <span>
+                      {testimonial.role} · {testimonial.location}
+                    </span>
+                  </footer>
+                </div>
+              ))}
+            </Slides>
+          </div>
+        </div>
+      </section>
+
+      <section className="homepage-section homepage-section--tinted">
+        <div className="shell">
+          <SectionHeader eyebrow="Questions" title="Common questions answered." centered />
+          <Fade inView inViewOnce>
+            <div className="wh-faq-list">
+              {faqs.map((faq, index) => (
+                <div
+                  key={faq.q}
+                  className={`wh-faq-item${openFaq === index ? " wh-faq-item--open" : ""}`}
+                >
+                  <button
+                    className="wh-faq-trigger"
+                    onClick={() => setOpenFaq(openFaq === index ? null : index)}
+                    aria-expanded={openFaq === index}
+                    aria-controls={`hosting-web-faq-${index}`}
+                  >
+                    {faq.q}
+                    <span className="wh-faq-chevron" aria-hidden="true">
+                      {openFaq === index ? "−" : "+"}
+                    </span>
+                  </button>
+                  {openFaq === index && (
+                    <div id={`hosting-web-faq-${index}`} className="wh-faq-answer">
+                      <p>{faq.a}</p>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </Fade>
+        </div>
+      </section>
+
+      <section className="homepage-section wh-cta-section">
+        <div className="shell">
+          <Fade inView inViewOnce>
+            <div className="wh-cta-box">
+              <h2>Launch on hosting that already covers the hard bits.</h2>
+              <p>
+                Pick a plan, publish with the AI builder, and let the stack handle SSL, backups, and migration support behind the scenes.
+              </p>
+              <a
+                href={buildCartAddUrl(featuredPlan.pid, billing, currency)}
+                className="wh-btn-primary"
+              >
+                Start building now <ArrowRight size={16} />
+              </a>
+              <div className="hero-reassurance">
+                <span>AI builder included</span>
+                <span>Free SSL and backups</span>
+                <span>Migration support</span>
+              </div>
+            </div>
+          </Fade>
+        </div>
+      </section>
+    </main>
+  );
+}

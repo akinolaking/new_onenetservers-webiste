@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 216 72" width="216" height="72" role="img" aria-label="Visa">
+  <!-- VISA wordmark paths — brand blue #1A1F71 -->
+  <!-- V -->
+  <path d="M0 6 L30 66 L60 6 H46 L30 40 L14 6 Z" fill="#1A1F71"/>
+  <!-- I -->
+  <rect x="68" y="6" width="16" height="60" rx="2" fill="#1A1F71"/>
+  <!-- S -->
+  <path d="M98 6 H148 C155 6 161 12 161 18 C161 24 157 28 151 30 C158 32 163 37 163 44 C163 56 154 66 142 66 H92 L97 54 H138 C143 54 146 51 146 47 C146 43 143 40 138 40 H108 L112 28 H140 C145 28 148 25 148 21 C148 17 145 14 140 14 H100 Z" fill="#1A1F71"/>
+  <!-- A -->
+  <path d="M172 6 L216 6 L196 66 H181 L189 44 H177 L172 6 Z M184 14 L188 34 H200 L206 14 Z" fill="#1A1F71"/>
+</svg>

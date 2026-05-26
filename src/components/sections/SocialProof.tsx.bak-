@@ -1,0 +1,115 @@
+import Image from "next/image";
+import Link from "next/link";
+
+const STORIES = [
+  {
+    key: "mama",
+    tag: "Food & Catering · Lagos",
+    title: "Mama Chidi's Kitchen",
+    story:
+      "A home caterer who had been taking orders via WhatsApp alone. Now has a full menu online, accepts bookings, and reaches new customers daily.",
+    image: "/assets/customer-stories/mama-chidi.webp",
+    href: "https://onenetservers.net/register.php",
+    proofLabel: "New booking",
+    proofTitle: "Sunday lunch for 12",
+    proofMeta: "11:42 AM · Deposit confirmed",
+    proofAction: "View order",
+    proofItems: ["Online menu live", "2 repeat customers today"],
+  },
+  {
+    key: "bb",
+    tag: "Fashion & Retail · London",
+    title: "The BB Bespokes",
+    story:
+      "A fabric designer selling textiles from his studio. He went from Instagram DMs to a WooCommerce storefront that ships across the UK and beyond.",
+    image: "/assets/customer-stories/london-bespokes.webp",
+    href: "https://onenetservers.net/register.php",
+    proofLabel: "WooCommerce order",
+    proofTitle: "+£148 · shipped to Manchester",
+    proofMeta: "Royal Mail label created",
+    proofAction: "View order",
+    proofItems: ["2 Ankara sets", "Dispatch ETA: Friday"],
+  },
+  {
+    key: "builders",
+    tag: "Developers & Collaborators · Nano / Micro Instances",
+    title: "Developers & Collaborators",
+    story:
+      "A small build team running Git, MongoDB, Docker, and shared project tooling on our Nano and Micro Instances. They ship collaboratively, keep costs lean, and spin up staging in minutes.",
+    image: "/assets/customer-stories/dev-collaboration.jpg",
+    href: "https://onenetservers.net/register.php",
+    proofLabel: "Project stack",
+    proofTitle: "Git · MongoDB · Docker",
+    proofMeta: "Nano / Micro Instances",
+    proofAction: "Open workspace",
+    proofItems: ["3 contributors synced", "Staging deploy in 4 minutes"],
+  },
+] as const;
+
+export function SocialProof() {
+  return (
+    <section className="story-section" id="stories">
+      <div className="shell">
+        <div className="story-section__head">
+          <div className="story-section__head-left">
+            <p className="story-section__eyebrow">Real businesses. Real results.</p>
+            <h2 className="story-section__title">From Lagos kitchens to London ateliers.</h2>
+          </div>
+          <p className="story-section__sub">
+            Business owners across Nigeria and the UK, live online in minutes, not months.
+          </p>
+        </div>
+      </div>
+
+      <div className="stories-stack-wrap" aria-label="Customer stories stack">
+        <div className="shell stories-stack-stage">
+          <div className="stories-stack-list">
+            {STORIES.map((story, index) => (
+              <article
+                key={story.key}
+                className={`story-slide story-slide--${story.key}${index === STORIES.length - 1 ? " story-slide--last" : ""}`}
+                aria-labelledby={`${story.key}-title`}
+              >
+                <div className="story-slide__media" aria-hidden="true">
+                  <Image
+                    src={story.image}
+                    alt=""
+                    fill
+                    className="story-slide__image"
+                    sizes="100vw"
+                    priority={index === 0}
+                  />
+                  <div className="story-slide__wash" />
+                </div>
+
+                <p className="story-slide__tag">{story.tag}</p>
+
+                <aside className="story-slide__proof" aria-hidden="true">
+                  <span className="story-slide__proof-label">{story.proofLabel}</span>
+                  <strong className="story-slide__proof-title">{story.proofTitle}</strong>
+                  <p className="story-slide__proof-meta">{story.proofMeta}</p>
+                  <div className="story-slide__proof-items">
+                    {story.proofItems.map((item) => (
+                      <span key={item}>{item}</span>
+                    ))}
+                  </div>
+                  <span className="story-slide__proof-action">{story.proofAction}</span>
+                </aside>
+
+                <div className="story-slide__content">
+                  <h3 id={`${story.key}-title`}>{story.title}</h3>
+                  <p>{story.story}</p>
+                  <Link href={story.href} className="story-slide__link">
+                    Get started free →
+                  </Link>
+                </div>
+
+                <p className="story-slide__verified">Verified customer story</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}

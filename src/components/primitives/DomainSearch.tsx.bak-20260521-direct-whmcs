@@ -1,0 +1,262 @@
+"use client";
+
+import { FormEvent, useMemo, useRef, useState } from "react";
+import { tlds } from "@/lib/home-data";
+import { useCurrency } from "@/lib/currency-context";
+import { buildDomainRegisterUrl, buildDomainTransferUrl } from "@/lib/whmcs";
+
+type TldResult = {
+  ext: string;
+  usd: number;
+  ngn: number;
+  gbp: number;
+  note: string;
+  available: boolean;
+};
+
+type SearchState =
+  | { kind: "idle" }
+  | { kind: "loading" }
+  | { kind: "results"; query: string; results: TldResult[]; degraded?: boolean };
+
+function normaliseDomain(value: string) {
+  return value.trim().toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-.]/g, "");
+}
+
+function stripExtension(value: string) {
+  const dot = value.indexOf(".");
+  return dot > -1 ? value.slice(0, dot) : value;
+}
+
+const FEATURED_EXTS = [".ng", ".com", ".com.ng", ".co.uk", ".shop", ".xyz"];
+
+const featuredTlds = FEATURED_EXTS
+  .map((ext) => tlds.find((t) => t.ext === ext))
+  .filter((t): t is NonNullable<typeof t> => t != null);
+
+function getRequestedExtension(value: string) {
+  const clean = normaliseDomain(value);
+  return FEATURED_EXTS
+    .slice()
+    .sort((a, b) => b.length - a.length)
+    .find((ext) => clean.endsWith(ext));
+}
+
+export function DomainSearch({ mode = "register" }: { mode?: "register" | "transfer" }) {
+  const [query, setQuery] = useState("");
+  const [state, setState] = useState<SearchState>({ kind: "idle" });
+  const { currency } = useCurrency();
+  const inputRef = useRef<HTMLInputElement>(null);
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const canSubmit = useMemo(
+    () => stripExtension(normaliseDomain(query)).length > 2,
+    [query]
+  );
+
+  function priceLabel(t: { usd: number; ngn: number; gbp: number }) {
+    if (t.usd === 0) return "Free";
+    if (currency === "NGN") return `₦${t.ngn.toLocaleString("en-US")}/yr`;
+    if (currency === "GBP") return `£${t.gbp.toFixed(2)}/yr`;
+    return `$${t.usd.toFixed(2)}/yr`;
+  }
+
+  function buildActionUrl(domain: string) {
+    return mode === "transfer"
+      ? buildDomainTransferUrl(domain, currency)
+      : buildDomainRegisterUrl(domain, currency);
+  }
+
+  function getFallbackResult(base: string, preferredExt?: string): TldResult {
+    const fallbackTld = featuredTlds.find((tld) => tld.ext === preferredExt) || featuredTlds.find((tld) => tld.ext === ".com") || featuredTlds[0];
+    return {
+      ext: fallbackTld.ext,
+      usd: fallbackTld.usd,
+      ngn: fallbackTld.ngn,
+      gbp: fallbackTld.gbp,
+      note: "Check in checkout",
+      available: true,
+    };
+  }
+
+  async function doSearch(base: string, preferredExt?: string) {
+    setState({ kind: "loading" });
+    const orderedTlds = preferredExt
+      ? [
+          ...featuredTlds.filter((tld) => tld.ext === preferredExt),
+          ...featuredTlds.filter((tld) => tld.ext !== preferredExt),
+        ]
+      : featuredTlds;
+
+    const lookups = await Promise.allSettled(
+      orderedTlds.map(async (tld) => {
+        const res = await fetch(`/domain-check.php?domain=${encodeURIComponent(`${base}${tld.ext}`)}`, {
+          signal: AbortSignal.timeout(5000),
+          headers: {
+            Accept: "application/json",
+          },
+        });
+        const contentType = res.headers.get("content-type") || "";
+        if (!res.ok || !contentType.includes("application/json")) {
+          throw new Error("lookup_failed");
+        }
+
+        const json = await res.json();
+        if (typeof json.available !== "boolean") {
+          throw new Error("lookup_failed");
+        }
+
+        return {
+          ext: tld.ext,
+          usd: tld.usd,
+          ngn: tld.ngn,
+          gbp: tld.gbp,
+          note: tld.note as string,
+          available: json.available,
+        };
+      })
+    );
+
+    const results = lookups.flatMap((lookup) => lookup.status === "fulfilled" ? [lookup.value] : []);
+    if (results.length > 0) {
+      setState({ kind: "results", query: base, results });
+      return;
+    }
+
+    setState({
+      kind: "results",
+      query: base,
+      results: [getFallbackResult(base, preferredExt)],
+      degraded: true,
+    });
+  }
+
+  async function onSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const base = stripExtension(normaliseDomain(query));
+    if (base.length <= 2) return;
+    await doSearch(base, getRequestedExtension(query));
+  }
+
+  function handleQueryChange(value: string) {
+    setQuery(value);
+    setState({ kind: "idle" });
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    const base = stripExtension(normaliseDomain(value));
+    if (base.length > 2) {
+      debounceRef.current = setTimeout(() => {
+        void doSearch(base, getRequestedExtension(value));
+      }, 300);
+    }
+  }
+
+  function onTldClick(ext: string) {
+    const base = stripExtension(normaliseDomain(query));
+    const newQuery = base.length > 0 ? `${base}${ext}` : ext;
+    setQuery(newQuery);
+    setState({ kind: "idle" });
+    const cursorPos = newQuery.length - ext.length;
+    requestAnimationFrame(() => {
+      if (inputRef.current) {
+        inputRef.current.focus();
+        inputRef.current.setSelectionRange(cursorPos, cursorPos);
+      }
+    });
+    if (base.length > 2) {
+      void doSearch(base, ext);
+    }
+  }
+
+  return (
+    <div className="domain-search-wrap">
+      <form
+        className="domain-search-form"
+        onSubmit={onSubmit}
+        role="search"
+        aria-label="Domain search"
+      >
+        <label className="sr-only" htmlFor="domain-search-input">
+          Enter a business name or domain to search
+        </label>
+        <div className="domain-search-field">
+          <input
+            ref={inputRef}
+            id="domain-search-input"
+            className="domain-search-input"
+            type="text"
+            value={query}
+            onChange={(e) => handleQueryChange(e.target.value)}
+            placeholder="Enter your business name or domain…"
+            autoComplete="off"
+            autoCapitalize="off"
+            spellCheck={false}
+          />
+          <button
+            type="submit"
+            className="domain-search-submit"
+            disabled={!canSubmit || state.kind === "loading"}
+            aria-busy={state.kind === "loading"}
+          >
+            {state.kind === "loading" ? (
+              <>
+                <span className="domain-search-spinner" aria-hidden="true" />
+                Searching&hellip;
+              </>
+            ) : (
+              "Search domains"
+            )}
+          </button>
+        </div>
+      </form>
+
+      {state.kind === "loading" && (
+        <div className="domain-result domain-result--loading" aria-live="polite">
+          Checking availability…
+        </div>
+      )}
+
+      {state.kind === "results" && (
+        <div className="domain-result-grid" aria-live="polite" aria-label="Domain search results">
+          {state.results.map((r) =>
+            r.available ? (
+              <a
+                key={r.ext}
+                href={buildActionUrl(`${state.query}${r.ext}`)}
+                className="domain-result-card domain-result-card--available"
+              >
+                {r.note && <span className="domain-result-card__badge">{r.note}</span>}
+                <span className="domain-result-card__name">
+                  <strong>{state.query}</strong>{r.ext}
+                </span>
+                <span className="domain-result-card__price">{priceLabel(r)}</span>
+                <span className="domain-result-card__cta">{mode === "transfer" ? "Transfer →" : "Register →"}</span>
+              </a>
+            ) : (
+              <div key={r.ext} className="domain-result-card domain-result-card--taken">
+                <span className="domain-result-card__name">
+                  <strong>{state.query}</strong>{r.ext}
+                </span>
+                <span className="domain-result-card__taken">Taken</span>
+              </div>
+            )
+          )}
+        </div>
+      )}
+
+      {state.kind === "idle" && (
+        <div className="hero-ext-hints" aria-label="Popular domain extensions">
+          {featuredTlds.map((t) => (
+            <button
+              key={t.ext}
+              type="button"
+              className="hero-ext-hint"
+              onClick={() => onTldClick(t.ext)}
+            >
+              <strong>{t.ext}</strong> from {priceLabel(t)}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}

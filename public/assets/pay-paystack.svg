@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 60" width="260" height="60" role="img" aria-label="Paystack">
+  <!-- Icon: 4 descending horizontal bars in cyan -->
+  <rect x="0" y="1"  width="46" height="11" rx="5.5" fill="#00C3F7"/>
+  <rect x="0" y="16" width="38" height="11" rx="5.5" fill="#00C3F7"/>
+  <rect x="0" y="31" width="27" height="11" rx="5.5" fill="#00C3F7"/>
+  <rect x="0" y="46" width="16" height="11" rx="5.5" fill="#00C3F7"/>
+  <!-- Wordmark: "paystack" in dark navy, rounded bold sans-serif approximation -->
+  <text x="58" y="46" font-family="'Inter','Helvetica Neue',Arial,sans-serif" font-size="36" font-weight="800" fill="#0A2540" letter-spacing="-0.5">paystack</text>
+</svg>

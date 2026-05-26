@@ -1,0 +1,360 @@
+- generic [ref=e2]:
+  - link "Skip to main content" [ref=e3] [cursor=pointer]:
+    - /url: "#main-content"
+  - banner [ref=e4]:
+    - generic [ref=e5]:
+      - link "OneNet Servers home" [ref=e6] [cursor=pointer]:
+        - /url: /
+        - img "OneNet Servers" [ref=e7]
+      - navigation [ref=e8]:
+        - list [ref=e9]:
+          - listitem [ref=e10]:
+            - button "Hosting" [ref=e11]:
+              - text: Hosting
+              - img [ref=e12]
+          - listitem [ref=e14]:
+            - button "Domains" [ref=e15]:
+              - text: Domains
+              - img [ref=e16]
+          - listitem [ref=e18]:
+            - button "Tools & Security" [ref=e19]:
+              - text: Tools & Security
+              - img [ref=e20]
+          - listitem [ref=e22]:
+            - button "Company" [ref=e23]:
+              - text: Company
+              - img [ref=e24]
+      - generic [ref=e26]:
+        - button "USD" [ref=e27]:
+          - text: USD
+          - img [ref=e28]
+        - link "Log in" [ref=e30] [cursor=pointer]:
+          - /url: /login.php
+        - link "Get started free" [ref=e31] [cursor=pointer]:
+          - /url: /cart.php?a=add&pid=261&billingcycle=monthly
+  - main [ref=e32]:
+    - complementary "Announcement" [ref=e33]:
+      - generic [ref=e34]:
+        - paragraph [ref=e35]: 30-day money-back guarantee on all plans · No credit card required · Free migration included
+        - generic [ref=e36]:
+          - link "Get started free" [ref=e37] [cursor=pointer]:
+            - /url: /cart.php?a=add&pid=261&billingcycle=annually
+          - button "Dismiss announcement" [ref=e38]: Close
+    - generic [ref=e39]:
+      - generic [ref=e40]:
+        - generic [ref=e41]:
+          - generic [ref=e42]: NiRA Accredited · Tech Nation Endorsed · 9-Region Infrastructure
+          - heading "Your domain. Your identity. Your world online." [level=1] [ref=e43]
+          - paragraph [ref=e44]: Web hosting, domains, email, and AI tools for the generation building Africa's digital future — from Lagos to London.
+          - generic [ref=e45]:
+            - link "Get started free" [ref=e46] [cursor=pointer]:
+              - /url: /cart.php?a=add&pid=261&billingcycle=annually
+            - link "See all plans" [ref=e47] [cursor=pointer]:
+              - /url: "#plans"
+          - generic "Reassurances" [ref=e48]:
+            - generic [ref=e49]: No credit card required
+            - generic [ref=e50]: Cancel anytime
+            - generic [ref=e51]: Free migration included
+          - generic [ref=e52]:
+            - generic [ref=e53]:
+              - generic [ref=e54]:
+                - strong [ref=e55]: Start with the domain you want.
+                - paragraph [ref=e56]: Search .ng, .co.uk, .com, and 30+ more extensions without leaving this page.
+              - link "See all prices" [ref=e57] [cursor=pointer]:
+                - /url: /domains
+            - generic [ref=e58]:
+              - search "Domain search" [ref=e59]:
+                - generic [ref=e60]: Enter a domain name to search
+                - generic [ref=e61]:
+                  - textbox "Enter a domain name to search" [ref=e62]:
+                    - /placeholder: Find your domain — yourbrand.ng
+                  - button "Search" [disabled] [ref=e63]
+              - paragraph [ref=e64]: Instant availability check · WHOIS privacy included · Activate in seconds
+              - generic "Popular domain extensions" [ref=e65]:
+                - generic [ref=e66]: .ng
+                - generic [ref=e67]: .com.ng
+                - generic [ref=e68]: .com
+                - generic [ref=e69]: .co.uk
+                - generic [ref=e70]: .ai
+          - paragraph [ref=e77]: ★★★★★ Join 500+ businesses already hosted with OneNet Servers
+        - generic [ref=e78]:
+          - figure [ref=e79]:
+            - img "Professional working on a laptop in a modern office environment." [ref=e80]
+          - generic [ref=e81]:
+            - figure "Nigeria · Lagos" [ref=e82]:
+              - img "Lagos skyline representing the Nigerian market." [ref=e83]
+              - generic [ref=e84]: Nigeria · Lagos
+            - figure "UK · London" [ref=e85]:
+              - img "London skyline representing the UK market." [ref=e86]
+              - generic [ref=e87]: UK · London
+      - generic "Hero statistics" [ref=e88]:
+        - generic [ref=e89]: 99.9% Uptime SLA
+        - generic [ref=e90]: <800ms Average load
+        - generic [ref=e91]: 9 Global regions
+        - generic [ref=e92]: 30-day money-back
+    - generic [ref=e93]:
+      - generic [ref=e94]:
+        - generic [ref=e95]: What we offer
+        - heading "Everything to put your business online." [level=2] [ref=e96]
+        - paragraph [ref=e97]: From your first domain to a fully managed AI-powered stack — built for serious builders in Lagos, London, and everywhere in between.
+      - generic [ref=e98]:
+        - article [ref=e99]:
+          - generic [ref=e100]: AI Builder · Docker · PanelAlpha · LiteSpeed
+          - heading "WordPress Hosting with AI Website Builder" [level=3] [ref=e101]
+          - paragraph [ref=e102]: Docker-isolated containers. AI generates your full site from a prompt. One-click staging. 10–30× faster than standard shared WordPress.
+          - generic [ref=e103]:
+            - strong [ref=e104]: $6.78/mo
+            - generic [ref=e105]: ₦10,500/mo
+            - generic [ref=e106]: £6.30/mo
+          - link "Launch WordPress" [ref=e107] [cursor=pointer]:
+            - /url: /cart.php?a=add&pid=261&billingcycle=monthly
+        - article [ref=e108]:
+          - generic [ref=e109]: NiRA Accredited · 30+ TLDs
+          - heading "Domain Registration" [level=3] [ref=e110]
+          - paragraph [ref=e111]: .ng, .com.ng, .ai, .dev, .co.uk and 27 more. WHOIS privacy, DNSSEC, instant activation.
+          - generic [ref=e112]:
+            - strong [ref=e113]: $3.42/yr
+            - generic [ref=e114]: ₦5,200/yr
+            - generic [ref=e115]: £2.70/yr
+          - link "Find your domain" [ref=e116] [cursor=pointer]:
+            - /url: /domains
+        - article [ref=e117]:
+          - generic [ref=e118]: LiteSpeed · CloudLinux · Plesk
+          - heading "Web Hosting" [level=3] [ref=e119]
+          - paragraph [ref=e120]: Dedicated CloudLinux environment. ImmunifyAV+ malware scanning. Not a shared-resource gamble.
+          - generic [ref=e121]:
+            - strong [ref=e122]: $3.99/mo
+            - generic [ref=e123]: ₦7,499/mo
+            - generic [ref=e124]: £3.71/mo
+          - link "Start hosting" [ref=e125] [cursor=pointer]:
+            - /url: /cart.php?a=add&pid=261&billingcycle=monthly
+        - article [ref=e126]:
+          - generic [ref=e127]: CrossBox · No per-user fees
+          - heading "Business Email" [level=3] [ref=e128]
+          - paragraph [ref=e129]: 5–100 addresses on one flat plan. Video calls, team chat, and shared storage built in.
+          - generic [ref=e130]:
+            - strong [ref=e131]: $2.33/mo
+            - generic [ref=e132]: ₦2,899/mo
+            - generic [ref=e133]: £1.79/mo
+          - link "Get email" [ref=e134] [cursor=pointer]:
+            - /url: /cart.php?a=add&pid=261&billingcycle=monthly
+        - article [ref=e135]:
+          - generic [ref=e136]: 8–96GB RAM · Unlimited Bandwidth
+          - heading "Cloud VPS" [level=3] [ref=e137]
+          - paragraph [ref=e138]: n8n, Docker, Wireguard, Nextcloud one-click deploy. Zero bandwidth throttling. AI-ready from VPS Lite.
+          - generic [ref=e139]:
+            - strong [ref=e140]: $12.42/mo
+            - generic [ref=e141]: ₦19,999/mo
+            - generic [ref=e142]: £11.56/mo
+          - link "Deploy VPS" [ref=e143] [cursor=pointer]:
+            - /url: /cart.php?a=add&pid=261&billingcycle=monthly
+        - article [ref=e144]:
+          - generic [ref=e145]: White-label · WHMCS · Private Nameservers
+          - heading "Reseller Hosting" [level=3] [ref=e146]
+          - paragraph [ref=e147]: Launch your own hosting brand. Full white-label, private nameservers, mobile billing app. Your infrastructure, your name.
+          - generic [ref=e148]:
+            - strong [ref=e149]: $5.39/mo
+            - generic [ref=e150]: ₦8,999/mo
+            - generic [ref=e151]: £4.10/mo
+          - link "Start reselling" [ref=e152] [cursor=pointer]:
+            - /url: /cart.php?a=add&pid=261&billingcycle=monthly
+    - generic [ref=e154]:
+      - generic [ref=e155]:
+        - generic [ref=e156]: Getting started
+        - heading "Live in under 10 minutes." [level=2] [ref=e157]
+        - paragraph [ref=e158]: No technical knowledge required. We handle setup — you get the keys.
+      - generic [ref=e159]:
+        - article [ref=e160]:
+          - generic [ref=e161]: "01"
+          - heading "Choose your plan" [level=3] [ref=e162]
+          - paragraph [ref=e163]: Pick the product and plan that fits. All plans include a 30-day money-back guarantee — no questions, no retention team.
+        - article [ref=e164]:
+          - generic [ref=e165]: "02"
+          - heading "We set everything up" [level=3] [ref=e166]
+          - paragraph [ref=e167]: "Your environment provisions automatically. Average activation: 2–5 minutes. For migrations, our team handles files, databases, DNS, and email — at no extra charge."
+        - article [ref=e168]:
+          - generic [ref=e169]: "03"
+          - heading "You go live" [level=3] [ref=e170]
+          - paragraph [ref=e171]: Log in to Plesk, PanelAlpha, or your client area. Your site is ready. Our support team is available 24/7.
+    - generic [ref=e172]:
+      - generic [ref=e173]:
+        - generic [ref=e174]: Pricing
+        - heading "Plans for every stage of growth." [level=2] [ref=e175]
+        - paragraph [ref=e176]: All plans include free SSL, daily backups, free domain migration, and 24/7 support. No hidden fees.
+      - generic [ref=e177]:
+        - generic [ref=e178]:
+          - generic [ref=e179]: AO
+          - generic [ref=e180]: TC
+          - generic [ref=e181]: SB
+          - generic [ref=e182]: +
+        - paragraph [ref=e183]: ★★★★★ Trusted by 500+ businesses across Nigeria, the UK, and beyond.
+      - generic [ref=e184]:
+        - button "Monthly" [ref=e185]
+        - button "Annual" [ref=e186]
+        - generic [ref=e187]: Save up to 35% · +2 months free
+      - generic [ref=e188]:
+        - button "Web Hosting" [ref=e189]
+        - button "WordPress" [ref=e190]
+        - button "Cloud VPS" [ref=e191]
+        - button "Domains" [ref=e192]
+      - generic [ref=e193]:
+        - article [ref=e194]:
+          - heading "Starter" [level=3] [ref=e195]
+          - paragraph [ref=e196]: Your first website deserves a real server. Solid performance. Zero complexity.
+          - generic [ref=e197]:
+            - strong [ref=e198]: $3.99/mo
+            - generic [ref=e199]: ₦7,499/mo
+            - generic [ref=e200]: £3.71/mo
+          - paragraph [ref=e201]: Renews at $3.99/mo after the first term.
+        - article [ref=e202]:
+          - generic [ref=e203]: Most popular
+          - heading "Premium" [level=3] [ref=e204]
+          - paragraph [ref=e205]: The plan serious builders choose. Managed for performance with CloudLinux isolation and ImmunifyAV+.
+          - generic [ref=e206]:
+            - strong [ref=e207]: $18.20/mo
+            - generic [ref=e208]: ₦24,999/mo
+            - generic [ref=e209]: £16.95/mo
+          - paragraph [ref=e210]: Renews at $18.20/mo after the first term.
+    - generic [ref=e212]:
+      - generic [ref=e213]:
+        - generic [ref=e214]:
+          - generic [ref=e215]: Built for Nigeria
+          - heading "Built for Nigeria. Powered from London." [level=2] [ref=e216]
+          - paragraph [ref=e217]: We are the only hosting company with roots in Lagos, a registered office in London, and the infrastructure to serve both markets at the same quality standard.
+        - generic [ref=e218]:
+          - generic [ref=e219]: Pay in naira via Paystack — no international card, no conversion fees, no payment friction.
+          - generic [ref=e220]: NiRA accredited registrar — direct .ng and .com.ng registration with no middleman layer.
+          - generic [ref=e221]: SCUML registered — compliant and protected under Nigerian law.
+          - generic [ref=e222]: Digital Identity Initiative — free first year online for qualifying founders, students, and freelancers.
+          - generic [ref=e223]: Local support awareness — our team understands Paystack, Nigerian business hours, and local domain requirements.
+      - generic [ref=e224]:
+        - heading "Your Nigeria-first advantage" [level=3] [ref=e225]
+        - paragraph [ref=e226]: Local domain credibility, naira billing, UK-grade operational discipline, and a team that understands how both markets actually buy.
+        - generic [ref=e227]:
+          - link "Explore the DII" [ref=e228] [cursor=pointer]:
+            - /url: /digital-identity
+          - link ".NG domain pricing" [ref=e229] [cursor=pointer]:
+            - /url: /domains/ng
+  - contentinfo [ref=e230]:
+    - generic [ref=e231]:
+      - generic [ref=e232]:
+        - generic [ref=e233]:
+          - link "OneNet Servers home" [ref=e234] [cursor=pointer]:
+            - /url: /
+            - img "OneNet Servers" [ref=e235]
+          - paragraph [ref=e236]: Hosting, domains, email, and infrastructure for businesses operating across Nigeria, the UK, and global markets from one clearer platform.
+          - generic [ref=e237]:
+            - link "Follow us on X" [ref=e238] [cursor=pointer]:
+              - /url: https://twitter.com/onenetservers
+              - text: X
+            - link "Follow us on LinkedIn" [ref=e239] [cursor=pointer]:
+              - /url: https://linkedin.com/company/onenetservers
+              - text: LinkedIn
+            - link "Follow us on Instagram" [ref=e240] [cursor=pointer]:
+              - /url: https://instagram.com/onenetservers
+              - text: Instagram
+            - link "Follow us on YouTube" [ref=e241] [cursor=pointer]:
+              - /url: https://youtube.com/@onenetservers
+              - text: YouTube
+        - generic [ref=e242]:
+          - heading "Hosting" [level=2] [ref=e243]
+          - list [ref=e244]:
+            - listitem [ref=e245]:
+              - link "Web Hosting" [ref=e246] [cursor=pointer]:
+                - /url: /hosting/web
+            - listitem [ref=e247]:
+              - link "WordPress Hosting" [ref=e248] [cursor=pointer]:
+                - /url: /hosting/wordpress
+            - listitem [ref=e249]:
+              - link "Reseller Hosting" [ref=e250] [cursor=pointer]:
+                - /url: /hosting/reseller
+            - listitem [ref=e251]:
+              - link "Cloud VPS" [ref=e252] [cursor=pointer]:
+                - /url: /hosting/vps
+            - listitem [ref=e253]: Garium Private AI
+        - generic [ref=e254]:
+          - heading "Domains" [level=2] [ref=e255]
+          - list [ref=e256]:
+            - listitem [ref=e257]:
+              - link "Register a Domain" [ref=e258] [cursor=pointer]:
+                - /url: /domains
+            - listitem [ref=e259]:
+              - link "Transfer a Domain" [ref=e260] [cursor=pointer]:
+                - /url: /domains/transfer
+            - listitem [ref=e261]:
+              - link ".NG Domains" [ref=e262] [cursor=pointer]:
+                - /url: /domains/ng
+            - listitem [ref=e263]:
+              - link ".COM.NG Domains" [ref=e264] [cursor=pointer]:
+                - /url: /domains/ng
+            - listitem [ref=e265]:
+              - link "TLD Pricing" [ref=e266] [cursor=pointer]:
+                - /url: /domains
+        - generic [ref=e267]:
+          - heading "Tools & Security" [level=2] [ref=e268]
+          - list [ref=e269]:
+            - listitem [ref=e270]:
+              - link "Business Email" [ref=e271] [cursor=pointer]:
+                - /url: /email
+            - listitem [ref=e272]:
+              - link "SSL Certificates" [ref=e273] [cursor=pointer]:
+                - /url: /security/ssl
+            - listitem [ref=e274]:
+              - link "OneGuard Security" [ref=e275] [cursor=pointer]:
+                - /url: /security/oneguard
+            - listitem [ref=e276]: Web Design
+            - listitem [ref=e277]:
+              - link "Future of Productivity" [ref=e278] [cursor=pointer]:
+                - /url: /community
+        - generic [ref=e279]:
+          - heading "Company" [level=2] [ref=e280]
+          - list [ref=e281]:
+            - listitem [ref=e282]:
+              - link "About Us" [ref=e283] [cursor=pointer]:
+                - /url: /about
+            - listitem [ref=e284]:
+              - link "Contact Us" [ref=e285] [cursor=pointer]:
+                - /url: /contact
+            - listitem [ref=e286]:
+              - link "Digital Identity Initiative" [ref=e287] [cursor=pointer]:
+                - /url: /digital-identity
+            - listitem [ref=e288]:
+              - link "Terms of Service" [ref=e289] [cursor=pointer]:
+                - /url: /legal/terms
+            - listitem [ref=e290]:
+              - link "Privacy Policy" [ref=e291] [cursor=pointer]:
+                - /url: /legal/privacy
+            - listitem [ref=e292]:
+              - link "Hosting Agreement" [ref=e293] [cursor=pointer]:
+                - /url: /legal/agreement
+        - generic [ref=e294]:
+          - heading "Contact" [level=2] [ref=e295]
+          - generic [ref=e296]:
+            - link "Nigeria +234 201 330 9154" [ref=e297] [cursor=pointer]:
+              - /url: tel:+2342013309154
+              - generic [ref=e298]: Nigeria
+              - strong [ref=e299]: +234 201 330 9154
+            - link "United Kingdom +44 7333 880 7775" [ref=e300] [cursor=pointer]:
+              - /url: tel:+447333880775
+              - generic [ref=e301]: United Kingdom
+              - strong [ref=e302]: +44 7333 880 7775
+            - link "Email support@onenetservers.net" [ref=e303] [cursor=pointer]:
+              - /url: mailto:support@onenetservers.net
+              - generic [ref=e304]: Email
+              - strong [ref=e305]: support@onenetservers.net
+      - generic [ref=e306]:
+        - generic [ref=e307]: NiRA Accredited
+        - generic [ref=e308]: "UK RC: 14565201"
+        - generic [ref=e309]: "NG RC: 1775966"
+        - generic [ref=e310]: SCUML Registered
+        - generic [ref=e311]: Tech Nation Endorsed
+        - generic [ref=e312]: Itana Digital Resident
+      - generic [ref=e313]:
+        - generic [ref=e314]: We accept
+        - generic [ref=e315]:
+          - generic [ref=e316]: Paystack
+          - generic [ref=e317]: Visa
+          - generic [ref=e318]: Mastercard
+          - generic [ref=e319]: Verve
+          - generic [ref=e320]: Bank Transfer
+      - generic [ref=e321]: © 2026 OneNet Servers, trading name of ConqolX Technologies Limited. Registered in England & Wales No. 14565201. Registered in Nigeria No. 1775966. SCUML registered. NiRA accredited. Prices shown exclude applicable VAT. Renewal prices may differ from first-term prices.

@@ -1,0 +1,159 @@
+"use client";
+
+import { useEffect, useMemo, useState } from "react";
+
+const SERVICE_PILLS = [
+  "Getting SMEs online in minutes",
+  "No code. No developer hassle",
+  "Premium branded email service",
+  "Build with AI — describe your idea",
+  "Sell your product online",
+  "Showcase your skills & service",
+  "First year on us — no credit card",
+] as const;
+
+const LOOPED_PILLS = [...SERVICE_PILLS, ...SERVICE_PILLS];
+const ROTATION_INTERVAL_MS = 2000;
+
+function CheckIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <polyline points="20 6 9 17 4 12" />
+    </svg>
+  );
+}
+
+function getPillState(index: number, activeIndex: number) {
+  const centerIndex = activeIndex + SERVICE_PILLS.length;
+  let offset = index - centerIndex;
+  const total = LOOPED_PILLS.length;
+
+  if (offset > total / 2) offset -= total;
+  if (offset < -total / 2) offset += total;
+
+  const distance = Math.abs(offset);
+
+  if (distance === 0) {
+    return { offset, scale: 1, opacity: 1 };
+  }
+
+  if (distance === 1) {
+    return { offset, scale: 0.75, opacity: 0.82 };
+  }
+
+  if (distance === 2) {
+    return { offset, scale: 0.5, opacity: 0.58 };
+  }
+
+  if (distance === 3) {
+    return { offset, scale: 0.2, opacity: 0 };
+  }
+
+  return { offset, scale: 0.2, opacity: 0 };
+}
+
+function getTop(offset: number) {
+  if (offset === 0) return "50%";
+  const sign = offset > 0 ? "+" : "-";
+  return `calc(50% ${sign} ${Math.abs(offset) * 1.05} * var(--nigeria-card-height))`;
+}
+
+export function NigeriaSection() {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [reduceMotion, setReduceMotion] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const sync = () => setReduceMotion(media.matches);
+    sync();
+
+    media.addEventListener("change", sync);
+    return () => media.removeEventListener("change", sync);
+  }, []);
+
+  useEffect(() => {
+    if (reduceMotion) return;
+
+    const timer = window.setInterval(() => {
+      setActiveIndex((current) => (current + 1) % SERVICE_PILLS.length);
+    }, ROTATION_INTERVAL_MS);
+
+    return () => window.clearInterval(timer);
+  }, [reduceMotion]);
+
+  const renderedPills = useMemo(
+    () =>
+      LOOPED_PILLS.map((label, index) => {
+        const state = getPillState(index, activeIndex);
+        return {
+          key: `${label}-${index}`,
+          label,
+          ...state,
+          isActive: state.offset === 0,
+        };
+      }),
+    [activeIndex],
+  );
+
+  return (
+    <section className="nigeria-hero-wrap" id="nigeria" aria-label="UK and Nigeria hosting banner">
+      <div className="nigeria-hero">
+        <div className="nigeria-hero__inner shell">
+          <article className="nigeria-hero__content">
+            <div className="nigeria-hero__text">
+              <p className="nigeria-hero__eyebrow">UK ⇄ NG Hosting</p>
+              <h2 className="nigeria-hero__title">Built in Lagos, Scaling from London</h2>
+              <p className="nigeria-hero__subtitle">
+                UK-Nigeria registered hosting provider with NiRA accreditation.
+              </p>
+              <a href="https://onenetservers.net/digital-identity" className="nigeria-hero__cta">
+                Get Started Free — 1st Year On Us
+              </a>
+            </div>
+
+            <div className="nigeria-hero__cards" aria-hidden="true">
+              <div className="nigeria-hero__cards-viewport">
+                {renderedPills.map((pill) => (
+                  <div
+                    key={pill.key}
+                    className={`nigeria-hero__pill${pill.isActive ? " is-active" : ""}`}
+                    style={{
+                      top: getTop(pill.offset),
+                      transform: `translate3d(0, -50%, 0) scale(${pill.scale})`,
+                      opacity: pill.opacity,
+                    }}
+                  >
+                    <span className="nigeria-hero__indicator" aria-hidden="true">
+                      <span className="nigeria-hero__indicator-ring" />
+                      <span className="nigeria-hero__indicator-core">
+                        <CheckIcon />
+                      </span>
+                    </span>
+                    <span className="nigeria-hero__pill-text">{pill.label}</span>
+                  </div>
+                ))}
+              </div>
+              <div className="nigeria-hero__mobile-rail">
+                <div className="nigeria-hero__mobile-rail-track">
+                  {SERVICE_PILLS.map((label, index) => (
+                    <div
+                      key={`${label}-mobile-${index}`}
+                      className={`nigeria-hero__mobile-pill${index === 0 ? " is-active" : ""}`}
+                    >
+                      <span className="nigeria-hero__mobile-pill-icon" aria-hidden="true">
+                        <CheckIcon />
+                      </span>
+                      <span>{label}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+  );
+}
