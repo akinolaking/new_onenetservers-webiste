@@ -369,7 +369,7 @@ export default function WebHostingPage() {
                 <span className="wh-trust-badge">Free SSL &amp; Backups</span>
                 <span className="wh-trust-badge">Free Migration</span>
               </div>
-            </Fade>
+            </div>
 
             <Fade inView inViewOnce delay={0.08} className="hosting-web-hero-visual">
               <div className="hosting-web-visual-card">
@@ -382,7 +382,7 @@ export default function WebHostingPage() {
                   sizes="(max-width: 1024px) 100vw, 620px"
                 />
               </div>
-            </Fade>
+            </div>
           </div>
         </div>
       </section>
