@@ -12,15 +12,9 @@ const AVATARS = [
 ];
 
 const STARTING_PRICES: Record<Currency, { hosting: string; domains: string }> = {
-  NGN: { hosting: "₦4,157/mo", domains: "₦8,650/yr" },
+  NGN: { hosting: "₦4,599/mo", domains: "₦8,650/yr" },
   GBP: { hosting: "£3.00/mo", domains: "£8.04/yr" },
   USD: { hosting: "$4.05/mo", domains: "$11.25/yr" },
-};
-
-const MARKET_MESSAGES: Record<Currency, string> = {
-  NGN: "Showing NGN pricing for Nigeria buyers.",
-  GBP: "Showing GBP pricing for UK buyers.",
-  USD: "Showing USD pricing for international buyers.",
 };
 
 const HERO_VIDEO_URL = "https://eu2.contabostorage.com/ea33529288244a5ba1392f473566ed15:panelalpha/onenetserversimagesfolders/onenet%20servers%20customer.webm";
@@ -28,7 +22,6 @@ const HERO_VIDEO_URL = "https://eu2.contabostorage.com/ea33529288244a5ba1392f473
 export function Hero() {
   const { currency } = useCurrency();
   const prices = STARTING_PRICES[currency];
-  const marketMessage = MARKET_MESSAGES[currency];
 
   return (
     <section className="hero-home" aria-label="Get your business online">
@@ -39,27 +32,6 @@ export function Hero() {
       </div>
       <div className="hero-overlay" aria-hidden="true" />
       <div className="hero-inner shell">
-        <h1 className="hero-h1">
-          Your business deserves<br />{" "}
-          to be online.
-        </h1>
-
-        <p className="hero-sub">
-          Don&apos;t let your tech setup slow you down. We get your business
-          on the internet in under 10&nbsp;minutes. No developer, no stress.
-        </p>
-
-        <div className="hero-search-wrap">
-          <DomainSearch />
-        </div>
-
-        <p className="hero-price-anchor">
-          Hosting from <strong>{prices.hosting}</strong> · Domains from <strong>{prices.domains}</strong>
-        </p>
-        <p className="hero-price-meta">
-          {marketMessage} VAT may apply. Renewal rates are shown before checkout.
-        </p>
-
 
         <div className="hero-proof">
           <div className="hero-proof__avatars">
@@ -74,8 +46,32 @@ export function Hero() {
               />
             ))}
           </div>
+          <span className="hero-proof__play" aria-hidden="true">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+              <path d="M3 2.5L11 7L3 11.5V2.5Z" />
+            </svg>
+          </span>
           <p>Join 500+ businesses already live with OneNet Servers</p>
         </div>
+
+        <h1 className="hero-h1">
+          Get your business online
+        </h1>
+
+        <p className="hero-sub">
+          Launch your website in under 10&nbsp;minutes. No developer, no stress.
+        </p>
+
+        <div className="hero-search-row">
+          <div className="hero-search-wrap">
+            <DomainSearch />
+          </div>
+          <p className="hero-price-anchor">
+            Hosting from <strong>{prices.hosting}</strong><br />
+            Domains from <strong>{prices.domains}</strong>
+          </p>
+        </div>
+
       </div>
     </section>
   );
