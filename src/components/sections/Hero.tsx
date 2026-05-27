@@ -42,8 +42,8 @@ export function Hero() {
                   key={i}
                   src={av.src}
                   alt={av.alt}
-                  width={18}
-                  height={18}
+                  width={30}
+                  height={30}
                   className="hero-proof__avatar"
                 />
               ))}

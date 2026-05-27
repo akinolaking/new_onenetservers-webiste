@@ -2704,10 +2704,10 @@ h1 {
 
 .hero-proof__avatars span,
 .hero-proof__avatar {
-  height: 18px;
-  width: 18px;
-  margin-left: -5px;
-  border: 1.5px solid #fff;
+  height: 30px;
+  width: 30px;
+  margin-left: -8px;
+  border: 2px solid #fff;
   border-radius: 999px;
   background: linear-gradient(135deg, var(--blue-xl) 0%, var(--blue-l) 100%);
   object-fit: cover;
