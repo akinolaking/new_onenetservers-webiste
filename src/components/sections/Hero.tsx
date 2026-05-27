@@ -6,9 +6,9 @@ import { useCurrency } from "@/lib/currency-context";
 import type { Currency } from "@/lib/site-data";
 
 const AVATARS = [
-  { src: "/assets/avatar-a.svg", alt: "OneNet customer profile from Lagos" },
-  { src: "/assets/avatar-b.svg", alt: "OneNet customer profile from London" },
-  { src: "/assets/avatar-c.svg", alt: "OneNet customer profile from Abuja" },
+  { src: "/assets/customer-stories/mama-chidi.webp", alt: "OneNet customer from Lagos" },
+  { src: "/assets/clients-showcase/kunie.webp", alt: "OneNet customer from Abuja" },
+  { src: "/assets/clients-showcase/rogertomlinson.webp", alt: "OneNet customer from London" },
 ];
 
 const STARTING_PRICES: Record<Currency, { hosting: string; domains: string }> = {
@@ -42,8 +42,8 @@ export function Hero() {
                   key={i}
                   src={av.src}
                   alt={av.alt}
-                  width={36}
-                  height={36}
+                  width={18}
+                  height={18}
                   className="hero-proof__avatar"
                 />
               ))}
