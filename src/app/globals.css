@@ -2547,22 +2547,29 @@ h1 {
   background:
     linear-gradient(
       180deg,
-      rgb(52 52 198 / 82%) 0%,
-      rgb(74 74 220 / 76%) 28%,
-      rgb(102 102 226 / 72%) 52%,
-      rgb(132 132 232 / 68%) 74%,
-      rgb(164 164 238 / 72%) 100%
+      rgba(0, 0, 0, 0.72) 0%,
+      rgba(0, 0, 0, 0.52) 45%,
+      rgba(0, 0, 0, 0.78) 100%
     );
 }
 
 .hero-inner {
   position: relative;
   z-index: 2;
-  display: grid;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   gap: 22px;
-  max-width: 780px;
+  width: 100%;
+  max-width: 860px;
   margin: 0 auto;
   text-align: center;
+  min-height: calc(100svh - var(--nav-h) - 80px - 48px);
+}
+
+.hero-inner .hero-search-row {
+  margin-top: auto;
+  width: 100%;
 }
 
 .hero-h1 {
