@@ -33,35 +33,34 @@ export function Hero() {
       <div className="hero-overlay" aria-hidden="true" />
       <div className="hero-inner shell">
 
-        <div className="hero-proof">
-          <div className="hero-proof__avatars">
-            {AVATARS.map((av, i) => (
-              <Image
-                key={i}
-                src={av.src}
-                alt={av.alt}
-                width={36}
-                height={36}
-                className="hero-proof__avatar"
-              />
-            ))}
+        {/* Centered content block */}
+        <div className="hero-content">
+          <div className="hero-proof">
+            <div className="hero-proof__avatars">
+              {AVATARS.map((av, i) => (
+                <Image
+                  key={i}
+                  src={av.src}
+                  alt={av.alt}
+                  width={36}
+                  height={36}
+                  className="hero-proof__avatar"
+                />
+              ))}
+            </div>
+            <p>Join 500+ businesses already live with OneNet Servers</p>
           </div>
-          <span className="hero-proof__play" aria-hidden="true">
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-              <path d="M3 2.5L11 7L3 11.5V2.5Z" />
-            </svg>
-          </span>
-          <p>Join 500+ businesses already live with OneNet Servers</p>
+
+          <h1 className="hero-h1">
+            Get your business online
+          </h1>
+
+          <p className="hero-sub">
+            Launch your website in under 10&nbsp;minutes. No developer, no stress.
+          </p>
         </div>
 
-        <h1 className="hero-h1">
-          Get your business online
-        </h1>
-
-        <p className="hero-sub">
-          Launch your website in under 10&nbsp;minutes. No developer, no stress.
-        </p>
-
+        {/* Search pinned to base */}
         <div className="hero-search-row">
           <div className="hero-search-wrap">
             <DomainSearch />
