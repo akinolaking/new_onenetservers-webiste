@@ -6,9 +6,9 @@ import { useCurrency } from "@/lib/currency-context";
 import type { Currency } from "@/lib/site-data";
 
 const AVATARS = [
-  { src: "/assets/customer-stories/mama-chidi.webp", alt: "Bay Tree", name: "Bay Tree", role: "Entrepreneur" },
-  { src: "/assets/clients-showcase/kunie.webp", alt: "Kunie", name: "Kunie", role: "Business Owner" },
-  { src: "/assets/clients-showcase/rogertomlinson.webp", alt: "Roger Tomlinson", name: "Roger Tomlinson", role: "Freelancer" },
+  { src: "/assets/proof/ada.webp", alt: "Ada", name: "Ada", role: "Entrepreneur" },
+  { src: "/assets/proof/emeka.webp", alt: "Emeka", name: "Emeka", role: "Business Owner" },
+  { src: "/assets/proof/seun.webp", alt: "Seun", name: "Seun", role: "Freelancer" },
 ];
 
 const STARTING_PRICES: Record<Currency, { hosting: string; domains: string }> = {
@@ -38,15 +38,7 @@ export function Hero() {
           <div className="hero-proof">
             <div className="hero-proof__avatars">
               {AVATARS.map((av, i) => (
-                <button
-                  key={i}
-                  type="button"
-                  className="hero-proof__item"
-                  aria-label={`${av.name}, ${av.role} — view testimonials`}
-                  onClick={() => {
-                    document.getElementById("testimonials")?.scrollIntoView({ behavior: "smooth" });
-                  }}
-                >
+                <div key={i} className="hero-proof__item">
                   <Image
                     src={av.src}
                     alt={av.alt}
@@ -58,7 +50,7 @@ export function Hero() {
                     <strong>{av.name}</strong>
                     <em>{av.role}</em>
                   </span>
-                </button>
+                </div>
               ))}
             </div>
             <p>Join 500+ businesses already live with OneNet Servers</p>
