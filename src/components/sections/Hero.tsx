@@ -6,9 +6,9 @@ import { useCurrency } from "@/lib/currency-context";
 import type { Currency } from "@/lib/site-data";
 
 const AVATARS = [
-  { src: "/assets/customer-stories/mama-chidi.webp", alt: "OneNet customer from Lagos" },
-  { src: "/assets/clients-showcase/kunie.webp", alt: "OneNet customer from Abuja" },
-  { src: "/assets/clients-showcase/rogertomlinson.webp", alt: "OneNet customer from London" },
+  { src: "/assets/customer-stories/mama-chidi.webp", alt: "Bay Tree", name: "Bay Tree", role: "Entrepreneur" },
+  { src: "/assets/clients-showcase/kunie.webp", alt: "Kunie", name: "Kunie", role: "Business Owner" },
+  { src: "/assets/clients-showcase/rogertomlinson.webp", alt: "Roger Tomlinson", name: "Roger Tomlinson", role: "Freelancer" },
 ];
 
 const STARTING_PRICES: Record<Currency, { hosting: string; domains: string }> = {
@@ -38,14 +38,27 @@ export function Hero() {
           <div className="hero-proof">
             <div className="hero-proof__avatars">
               {AVATARS.map((av, i) => (
-                <Image
+                <button
                   key={i}
-                  src={av.src}
-                  alt={av.alt}
-                  width={30}
-                  height={30}
-                  className="hero-proof__avatar"
-                />
+                  type="button"
+                  className="hero-proof__item"
+                  aria-label={`${av.name}, ${av.role} — view testimonials`}
+                  onClick={() => {
+                    document.getElementById("testimonials")?.scrollIntoView({ behavior: "smooth" });
+                  }}
+                >
+                  <Image
+                    src={av.src}
+                    alt={av.alt}
+                    width={30}
+                    height={30}
+                    className="hero-proof__avatar"
+                  />
+                  <span className="hero-proof__tooltip">
+                    <strong>{av.name}</strong>
+                    <em>{av.role}</em>
+                  </span>
+                </button>
               ))}
             </div>
             <p>Join 500+ businesses already live with OneNet Servers</p>

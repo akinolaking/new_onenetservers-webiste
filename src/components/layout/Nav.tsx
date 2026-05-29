@@ -27,7 +27,6 @@ import {
   ChevronDown,
   X,
   ShoppingCart,
-  LogIn,
   ArrowRight,
   Phone,
   MessageCircle,
@@ -39,6 +38,7 @@ import {
   Cpu,
   Users,
   Scale,
+  User,
 } from "lucide-react";
 
 import {
@@ -542,38 +542,35 @@ export function Nav() {
               <MessageCircle className="h-5 w-5" />
             </button>
 
-            <div className="nav-auth-switch">
-              {authResolved && isAuthenticated ? (
-                <a href={myAccountHref} className="nav-secondary-link">
-                  <LogIn className="h-3.5 w-3.5" />
-                  My account
-                </a>
-              ) : (
-                <button
-                  type="button"
-                  className="nav-secondary-link"
-                  onClick={() => setAuthOpen(true)}
-                >
-                  <LogIn className="h-3.5 w-3.5" />
-                  Log in
-                </button>
-              )}
-            </div>
+            {/* Profile icon */}
+            {authResolved && isAuthenticated ? (
+              <a href={myAccountHref} className="nav-icon-btn" aria-label="My account">
+                <User className="h-5 w-5" />
+              </a>
+            ) : (
+              <button
+                type="button"
+                className="nav-icon-btn"
+                aria-label="Log in"
+                onClick={() => setAuthOpen(true)}
+              >
+                <User className="h-5 w-5" />
+              </button>
+            )}
 
-            {/* Get started */}
+            {/* Dashboard */}
             {authResolved && isAuthenticated ? (
               <a href={dashboardHref} className="nav-primary-link">
                 Dashboard
-                <ArrowRight className="h-3.5 w-3.5" />
               </a>
             ) : (
-              <Link
-                href={guestPrimaryCta.href}
+              <button
+                type="button"
                 className="nav-primary-link"
+                onClick={() => setAuthOpen(true)}
               >
-                {guestPrimaryCta.label}
-                <ArrowRight className="h-3.5 w-3.5" />
-              </Link>
+                Dashboard
+              </button>
             )}
           </div>
 
