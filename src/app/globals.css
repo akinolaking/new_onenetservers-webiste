@@ -466,19 +466,19 @@ select {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  min-height: 42px;
+  min-height: 40px;
   border: 0;
-  border-radius: var(--pill);
+  border-radius: var(--r1);
   background: transparent;
-  color: var(--ink-2);
-  padding: 0 14px;
+  color: var(--muted);
+  padding: 0 10px;
   font-size: 12px;
   font-weight: 400;
   box-shadow: none;
   transition: background 0.15s ease, color 0.15s ease;
 }
 .currency-trigger:hover {
-  background: rgb(245 245 255 / 96%);
+  background: var(--blue-xs);
   color: var(--blue);
 }
 
@@ -539,19 +539,19 @@ select {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 42px;
-  height: 42px;
+  width: 40px;
+  height: 40px;
   border: 0;
   border-radius: var(--r1);
   background: transparent;
-  color: var(--ink-2);
+  color: var(--muted);
   box-shadow: none;
   transition: background 0.15s ease, color 0.15s ease;
 }
 
 .nav-cart:hover,
 .nav-chat:hover {
-  background: rgb(245 245 255 / 96%);
+  background: var(--blue-xs);
   color: var(--blue);
 }
 
@@ -560,8 +560,8 @@ select {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 42px;
-  border-radius: var(--pill);
+  min-height: 40px;
+  border-radius: var(--r2);
   padding: 0 16px;
   font-size: 14px;
   font-weight: 500;
@@ -2742,13 +2742,13 @@ h1 {
 
 .hero-proof__avatars {
   display: flex;
+  overflow: visible;
 }
 
 .hero-proof__avatars span,
 .hero-proof__avatar {
   height: 30px;
   width: 30px;
-  margin-left: -8px;
   border: 2px solid #fff;
   border-radius: 999px;
   background: linear-gradient(135deg, var(--blue-xl) 0%, var(--blue-l) 100%);
@@ -2768,9 +2768,9 @@ h1 {
   border: 0;
   background: transparent;
   padding: 0;
-  cursor: pointer;
+  cursor: default;
   margin-left: -8px;
-  transition: transform 0.18s ease;
+  transition: z-index 0s;
   z-index: 1;
 }
 .hero-proof__item:first-child {
@@ -2791,6 +2791,7 @@ h1 {
   color: var(--ink);
   border-radius: 10px;
   padding: 8px 13px;
+  min-width: 120px;
   line-height: 1.35;
   white-space: nowrap;
   pointer-events: none;
