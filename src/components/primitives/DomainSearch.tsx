@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useMemo, useState } from "react";
+import { FormEvent, useState } from "react";
 import { useCurrency } from "@/lib/currency-context";
 import { buildDomainRegisterUrl, buildDomainTransferUrl } from "@/lib/whmcs";
 
@@ -11,7 +11,6 @@ function normaliseDomain(value: string) {
 export function DomainSearch({ mode = "register" }: { mode?: "register" | "transfer" }) {
   const [query, setQuery] = useState("");
   const { currency } = useCurrency();
-  const canSubmit = useMemo(() => normaliseDomain(query).length > 2, [query]);
 
   function buildActionUrl(domain: string) {
     return mode === "transfer"
@@ -56,7 +55,6 @@ export function DomainSearch({ mode = "register" }: { mode?: "register" | "trans
           <button
             type="submit"
             className="domain-search-submit"
-            disabled={!canSubmit}
           >
             Search domains
           </button>
