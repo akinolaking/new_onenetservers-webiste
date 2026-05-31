@@ -245,20 +245,7 @@ select {
 .site-nav:not(.site-nav--scrolled) .nav-trigger {
   color: rgb(255 255 255 / 88%);
 }
-.site-nav:not(.site-nav--scrolled) .nav-cart,
-.site-nav:not(.site-nav--scrolled) .nav-chat,
-.site-nav:not(.site-nav--scrolled) .nav-icon-btn {
-  color: #fff;
-  border: 0;
-  background: transparent;
-  box-shadow: none;
-}
-.site-nav:not(.site-nav--scrolled) .nav-cart:hover,
-.site-nav:not(.site-nav--scrolled) .nav-chat:hover,
-.site-nav:not(.site-nav--scrolled) .nav-icon-btn:hover {
-  background: rgb(255 255 255 / 16%);
-  color: #fff;
-}
+/* transparent-nav icon overrides now live alongside the canonical .nav-cart rule */
 .site-nav:not(.site-nav--scrolled) .nav-trigger:hover,
 .site-nav:not(.site-nav--scrolled) .nav-trigger[data-open],
 .site-nav:not(.site-nav--scrolled) .nav-trigger[data-popup-open] {
@@ -534,7 +521,8 @@ select {
 }
 
 .nav-cart,
-.nav-chat {
+.nav-chat,
+.nav-icon-btn {
   position: relative;
   display: inline-flex;
   align-items: center;
@@ -546,13 +534,29 @@ select {
   background: transparent;
   color: var(--muted);
   box-shadow: none;
+  cursor: pointer;
+  text-decoration: none;
   transition: background 0.15s ease, color 0.15s ease;
 }
 
 .nav-cart:hover,
-.nav-chat:hover {
+.nav-chat:hover,
+.nav-icon-btn:hover {
   background: var(--blue-xs);
   color: var(--blue);
+}
+
+/* On dark/transparent nav — show white, hover adds subtle tint */
+.site-nav:not(.site-nav--scrolled) .nav-cart,
+.site-nav:not(.site-nav--scrolled) .nav-chat,
+.site-nav:not(.site-nav--scrolled) .nav-icon-btn {
+  color: rgb(255 255 255 / 88%);
+}
+.site-nav:not(.site-nav--scrolled) .nav-cart:hover,
+.site-nav:not(.site-nav--scrolled) .nav-chat:hover,
+.site-nav:not(.site-nav--scrolled) .nav-icon-btn:hover {
+  background: rgb(255 255 255 / 14%);
+  color: #fff;
 }
 
 .nav-secondary-link,
@@ -2163,45 +2167,7 @@ h1 {
   margin-left: 9px;
 }
 
-/* ── Cart icon ── */
-.nav-cart {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  border: 0;
-  border-radius: var(--r1);
-  background: transparent;
-  color: var(--muted);
-  box-shadow: none;
-  transition: color 0.15s ease, background 0.15s ease;
-}
-.nav-cart:hover {
-  color: var(--blue);
-  background: var(--blue-xs);
-}
-
-/* ── Profile icon button ── */
-.nav-icon-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  border: 0;
-  border-radius: var(--r1);
-  background: transparent;
-  color: var(--muted);
-  box-shadow: none;
-  transition: color 0.15s ease, background 0.15s ease;
-  cursor: pointer;
-  text-decoration: none;
-}
-.nav-icon-btn:hover {
-  background: var(--blue-xs);
-  color: var(--blue);
-}
+/* ── Cart / Chat / Profile icon — canonical rule is in the base nav section above ── */
 
 /* ── Hamburger bar (static fallback) ── */
 .nav-bar {
@@ -2781,23 +2747,17 @@ h1 {
 }
 
 .hero-proof__tooltip {
-  position: absolute;
-  bottom: calc(100% + 10px);
-  left: 50%;
-  transform: translateX(-50%) translateY(6px);
   background: #fff;
   border: 1px solid var(--line);
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.14);
   color: var(--ink);
   border-radius: 10px;
   padding: 8px 13px;
-  min-width: 120px;
+  min-width: 110px;
   line-height: 1.35;
   white-space: nowrap;
   pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.16s ease, transform 0.16s ease;
-  z-index: 20;
+  animation: tooltip-in 0.14s ease forwards;
 }
 .hero-proof__tooltip strong {
   display: block;
@@ -2813,9 +2773,9 @@ h1 {
   color: var(--muted);
   margin-top: 2px;
 }
-.hero-proof__item:hover .hero-proof__tooltip {
-  opacity: 1;
-  transform: translateX(-50%) translateY(0);
+@keyframes tooltip-in {
+  from { opacity: 0; transform: translateX(-50%) translateY(calc(-100% - 4px)); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(calc(-100% - 10px)); }
 }
 
 /* ── Hero (blue-to-white gradient) domain search overrides ── */
@@ -9389,19 +9349,7 @@ details[open] .legal-accordion__chevron {
 }
 
 
-/* PHASE3 NAV VISIBILITY OVERRIDES */
-.site-nav:not(.site-nav--scrolled) .nav-cart,
-.site-nav:not(.site-nav--scrolled) .nav-chat,
-.site-nav:not(.site-nav--scrolled) .currency-trigger,
-.site-nav:not(.site-nav--scrolled) .nav-toggle{background:rgb(255 255 255 / 22%)!important;border-color:rgb(255 255 255 / 56%)!important;color:#fff!important;}
-.site-nav:not(.site-nav--scrolled) .nav-cart:hover,
-.site-nav:not(.site-nav--scrolled) .nav-chat:hover,
-.site-nav:not(.site-nav--scrolled) .currency-trigger:hover,
-.site-nav:not(.site-nav--scrolled) .nav-toggle:hover{background:rgb(255 255 255 / 28%)!important;border-color:rgb(255 255 255 / 68%)!important;color:#fff!important;}
-.nav-actions{gap:14px!important;}
-.nav-mobile-controls{gap:16px!important;}
-.nav-cart svg,.nav-chat svg,.currency-trigger svg,.nav-toggle svg{opacity:1!important;stroke-width:2!important;}
-.nav-cart,.nav-chat,.currency-trigger,.nav-toggle{box-shadow:0 1px 2px rgb(15 15 26 / 6%),0 10px 22px rgb(15 15 26 / 10%)!important;}
+/* PHASE3 NAV VISIBILITY OVERRIDES — removed, handled by nav-icon-btn unified rules */
 @media (max-width:767px){.nav-mobile-controls{gap:16px!important;}}
 
 
