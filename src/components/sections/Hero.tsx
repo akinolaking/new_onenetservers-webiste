@@ -7,9 +7,9 @@ import { useCurrency } from "@/lib/currency-context";
 import type { Currency } from "@/lib/site-data";
 
 const AVATARS = [
-  { src: "/assets/proof/ada.webp", alt: "Ada", name: "Ada", role: "Entrepreneur" },
-  { src: "/assets/proof/emeka.webp", alt: "Emeka", name: "Emeka", role: "Business Owner" },
-  { src: "/assets/proof/seun.webp", alt: "Seun", name: "Seun", role: "Freelancer" },
+  { src: "https://images.unsplash.com/photo-1611432579699-484f7990b127?q=80&w=2340&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", alt: "Ada", name: "Ada", role: "Entrepreneur" },
+  { src: "https://plus.unsplash.com/premium_photo-1759569361991-ff009a99e98c?q=80&w=2340&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", alt: "Emeka", name: "Emeka", role: "Business Owner" },
+  { src: "https://images.unsplash.com/photo-1595152772835-219674b2a8a6?q=80&w=1760&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", alt: "Seun", name: "Seun", role: "Freelancer" },
 ];
 
 const STARTING_PRICES: Record<Currency, { hosting: string; domains: string }> = {
