@@ -122,17 +122,11 @@ const CurrencyFlag = ({ code }: { code: Currency }) => {
  * ─────────────────────────────────────────────────────────────────── */
 function DesktopDropdown({ group }: { group: NavGroup }) {
   const [open, setOpen] = useState(false);
-  const isHosting = group.title === "Hosting";
-  const panelClassName = cn(
-    "nav-dropdown-panel",
-    isHosting && "nav-dropdown-panel--hosting",
-    group.title === "Domains" && "nav-dropdown-panel--domains",
-    group.title === "Tools & Security" && "nav-dropdown-panel--tools",
-  );
+  const isWide = group.title === "Hosting";
 
   return (
     <div
-      className={cn("relative nav-group", open && "nav-group--open")}
+      className="relative"
       onMouseEnter={() => setOpen(true)}
       onMouseLeave={() => setOpen(false)}
     >
@@ -166,21 +160,21 @@ function DesktopDropdown({ group }: { group: NavGroup }) {
               top: "100%",
               left: 0,
               right: 0,
-              height: "4px",
+              height: "8px",
               zIndex: 199,
             }}
           />
           <div
             style={{
-              top: "calc(100% + 4px)",
-              left: 0,
-              right: "auto",
-              transform: "none",
+              position: "absolute",
+              top: "calc(100% + 8px)",
+              left: isWide ? "50%" : 0,
+              transform: isWide ? "translateX(-50%)" : undefined,
               zIndex: 200,
             }}
-            className={panelClassName}
+            className="nav-dropdown-panel"
           >
-          <div className="nav-dropdown-grid">
+          <div className={cn("nav-dropdown-grid", isWide && "nav-dropdown-grid--wide")}>
             {group.items.map((item) =>
               item.disabled ? (
                 <span key={item.label} className="nav-dropdown-item nav-dropdown-item--disabled">
