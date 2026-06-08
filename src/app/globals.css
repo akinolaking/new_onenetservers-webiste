@@ -9394,12 +9394,12 @@ details[open] .legal-accordion__chevron {
 .site-nav:not(.site-nav--scrolled) .nav-cart,
 .site-nav:not(.site-nav--scrolled) .nav-chat{background:transparent!important;border-color:transparent!important;box-shadow:none!important;color:#fff!important;}
 .site-nav:not(.site-nav--scrolled) .currency-trigger,
-.site-nav:not(.site-nav--scrolled) .nav-toggle{background:rgb(255 255 255 / 22%)!important;border-color:rgb(255 255 255 / 56%)!important;color:#fff!important;}
+.site-nav:not(.site-nav--scrolled) .nav-toggle{background:transparent!important;border-color:rgb(255 255 255 / 56%)!important;color:#fff!important;box-shadow:none!important;}
 .site-nav:not(.site-nav--scrolled) .nav-cart:hover,
 .site-nav:not(.site-nav--scrolled) .nav-chat:hover,
 .site-nav:not(.site-nav--scrolled) .currency-trigger:hover,
 .site-nav:not(.site-nav--scrolled) .nav-toggle:hover{background:rgb(255 255 255 / 28%)!important;border-color:rgb(255 255 255 / 68%)!important;color:#fff!important;}
-.nav-actions{gap:14px!important;}
+.nav-actions{gap:8px!important;}
 .nav-mobile-controls{gap:16px!important;}
 .nav-cart svg,.nav-chat svg,.currency-trigger svg,.nav-toggle svg{opacity:1!important;stroke-width:2!important;}
 .nav-cart,.nav-chat,.currency-trigger,.nav-toggle{box-shadow:none!important;}
