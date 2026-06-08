@@ -122,11 +122,20 @@ const CurrencyFlag = ({ code }: { code: Currency }) => {
  * ─────────────────────────────────────────────────────────────────── */
 function DesktopDropdown({ group }: { group: NavGroup }) {
   const [open, setOpen] = useState(false);
-  const isWide = group.title === "Hosting";
+  const isHosting = group.title === "Hosting";
+  const isCompany = group.title === "Company";
+  const alignsRight = isCompany;
+  const panelClassName = cn(
+    "nav-dropdown-panel",
+    isHosting && "nav-dropdown-panel--hosting",
+    isCompany && "nav-dropdown-panel--company",
+    group.title === "Domains" && "nav-dropdown-panel--domains",
+    group.title === "Tools & Security" && "nav-dropdown-panel--tools",
+  );
 
   return (
     <div
-      className="relative"
+      className={cn("relative nav-group", open && "nav-group--open")}
       onMouseEnter={() => setOpen(true)}
       onMouseLeave={() => setOpen(false)}
     >
@@ -160,21 +169,21 @@ function DesktopDropdown({ group }: { group: NavGroup }) {
               top: "100%",
               left: 0,
               right: 0,
-              height: "8px",
+              height: "4px",
               zIndex: 199,
             }}
           />
           <div
             style={{
-              position: "absolute",
-              top: "calc(100% + 8px)",
-              left: isWide ? "50%" : 0,
-              transform: isWide ? "translateX(-50%)" : undefined,
+              top: "calc(100% + 4px)",
+              left: alignsRight ? "auto" : "50%",
+              right: alignsRight ? 0 : "auto",
+              transform: alignsRight ? undefined : "translateX(-50%)",
               zIndex: 200,
             }}
-            className="nav-dropdown-panel"
+            className={panelClassName}
           >
-          <div className={cn("nav-dropdown-grid", isWide && "nav-dropdown-grid--wide")}>
+          <div className="nav-dropdown-grid">
             {group.items.map((item) =>
               item.disabled ? (
                 <span key={item.label} className="nav-dropdown-item nav-dropdown-item--disabled">
@@ -312,9 +321,6 @@ function MobileNavGroup({
 }
 
 /* ─── Main Nav ───────────────────────────────────────────────────── */
-/* Pages without a hero — nav should always appear solid */
-const SOLID_NAV_PATHS = ["/legal", "/about", "/contact", "/community", "/digital-identity", "/domains", "/hosting", "/wordpress-hosting"];
-
 export function Nav() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [authOpen, setAuthOpen] = useState(false);
@@ -329,7 +335,7 @@ export function Nav() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [hasMounted, setHasMounted] = useState(false);
   const pathname = usePathname();
-  const forceSolid = SOLID_NAV_PATHS.some((p) => pathname?.startsWith(p));
+  const isHome = pathname === "/";
 
   function getGuestPrimaryCta() {
     if (pathname === "/") {
@@ -348,6 +354,11 @@ export function Nav() {
   }
 
   const guestPrimaryCta = getGuestPrimaryCta();
+  const mobilePrimaryCta = authResolved && isAuthenticated
+    ? { label: "Dashboard", href: dashboardHref }
+    : pathname === "/"
+      ? { label: "Start", href: guestPrimaryCta.href }
+      : { label: "Plans", href: guestPrimaryCta.href };
 
   function syncAuthState(loggedIn: boolean) {
     setIsAuthenticated(loggedIn);
@@ -499,7 +510,7 @@ export function Nav() {
 
       <AuthModal open={authOpen} onClose={() => setAuthOpen(false)} />
 
-      <header className={cn("site-nav", (isScrolled || forceSolid) && "site-nav--scrolled")}>
+      <header className={cn("site-nav", isHome && "site-nav--home", isScrolled && "site-nav--scrolled")}>
         <div className="shell nav-shell">
 
           {/* ── Brand ── */}
@@ -580,6 +591,13 @@ export function Nav() {
           {/* ── Mobile actions + Sheet drawer ── */}
           {hasMounted ? (
             <div className="nav-mobile-controls">
+              <Link
+                href={mobilePrimaryCta.href}
+                className="nav-primary-link nav-mobile-cta"
+              >
+                {mobilePrimaryCta.label}
+              </Link>
+
               <a href={buildWhmcsUrl("/cart.php", { a: "view" })} className="nav-cart nav-cart--mobile" aria-label="View cart">
                 <ShoppingCart className="h-5 w-5" />
                 {cartCount > 0 ? (
@@ -759,7 +777,7 @@ export function Nav() {
             </div>
           ) : (
             <div className="nav-mobile-controls">
-              <span className="nav-mobile-placeholder" aria-hidden="true" />
+              <span className="nav-mobile-placeholder nav-mobile-placeholder--cta" aria-hidden="true" />
               <span className="nav-mobile-placeholder" aria-hidden="true" />
               <button type="button" className="nav-toggle" aria-label="Open menu">
                 <span className="nav-bar" />

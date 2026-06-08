@@ -1,34 +1,41 @@
 "use client";
 
 import Image from "next/image";
+import { useState, type MouseEvent } from "react";
 import { DomainSearch } from "@/components/primitives/DomainSearch";
 import { useCurrency } from "@/lib/currency-context";
 import type { Currency } from "@/lib/site-data";
 
 const AVATARS = [
-  { src: "/assets/avatar-a.svg", alt: "OneNet customer profile from Lagos" },
-  { src: "/assets/avatar-b.svg", alt: "OneNet customer profile from London" },
-  { src: "/assets/avatar-c.svg", alt: "OneNet customer profile from Abuja" },
+  { src: "/assets/images/ada.png", alt: "Ada", name: "Ada", role: "Entrepreneur" },
+  { src: "/assets/images/emeka.png", alt: "Emeka", name: "Emeka", role: "Business Owner" },
+  { src: "/assets/images/seun.png", alt: "Seun", name: "Seun", role: "Freelancer" },
 ];
 
 const STARTING_PRICES: Record<Currency, { hosting: string; domains: string }> = {
-  NGN: { hosting: "₦4,157/mo", domains: "₦8,650/yr" },
+  NGN: { hosting: "₦4,599/mo", domains: "₦8,650/yr" },
   GBP: { hosting: "£3.00/mo", domains: "£8.04/yr" },
   USD: { hosting: "$4.05/mo", domains: "$11.25/yr" },
 };
 
-const MARKET_MESSAGES: Record<Currency, string> = {
-  NGN: "Showing NGN pricing for Nigeria buyers.",
-  GBP: "Showing GBP pricing for UK buyers.",
-  USD: "Showing USD pricing for international buyers.",
-};
+const HERO_VIDEO_URL = "/assets/contabo/home/onenet-customers.webm";
 
-const HERO_VIDEO_URL = "https://eu2.contabostorage.com/ea33529288244a5ba1392f473566ed15:panelalpha/onenetserversimagesfolders/onenet%20servers%20customer.webm";
+type TooltipState = { name: string; role: string; x: number; y: number } | null;
 
 export function Hero() {
   const { currency } = useCurrency();
   const prices = STARTING_PRICES[currency];
-  const marketMessage = MARKET_MESSAGES[currency];
+  const [tooltip, setTooltip] = useState<TooltipState>(null);
+
+  function handleAvatarEnter(e: MouseEvent<HTMLDivElement>, av: typeof AVATARS[0]) {
+    const rect = e.currentTarget.getBoundingClientRect();
+    setTooltip({
+      name: av.name,
+      role: av.role,
+      x: rect.left + rect.width / 2,
+      y: rect.top,
+    });
+  }
 
   return (
     <section className="hero-home" aria-label="Get your business online">
@@ -39,44 +46,72 @@ export function Hero() {
       </div>
       <div className="hero-overlay" aria-hidden="true" />
       <div className="hero-inner shell">
-        <h1 className="hero-h1">
-          Your business deserves<br />{" "}
-          to be online.
-        </h1>
 
-        <p className="hero-sub">
-          Don&apos;t let your tech setup slow you down. We get your business
-          on the internet in under 10&nbsp;minutes. No developer, no stress.
-        </p>
-
-        <div className="hero-search-wrap">
-          <DomainSearch />
-        </div>
-
-        <p className="hero-price-anchor">
-          Hosting from <strong>{prices.hosting}</strong> · Domains from <strong>{prices.domains}</strong>
-        </p>
-        <p className="hero-price-meta">
-          {marketMessage} VAT may apply. Renewal rates are shown before checkout.
-        </p>
-
-
-        <div className="hero-proof">
-          <div className="hero-proof__avatars">
-            {AVATARS.map((av, i) => (
-              <Image
-                key={i}
-                src={av.src}
-                alt={av.alt}
-                width={36}
-                height={36}
-                className="hero-proof__avatar"
-              />
-            ))}
+        {/* Centered content block */}
+        <div className="hero-content">
+          <div className="hero-proof">
+            <div className="hero-proof__avatars">
+              {AVATARS.map((av, i) => (
+                <div
+                  key={i}
+                  className="hero-proof__item"
+                  onMouseEnter={(e) => handleAvatarEnter(e, av)}
+                  onMouseLeave={() => setTooltip(null)}
+                >
+                  <Image
+                    src={av.src}
+                    alt={av.alt}
+                    width={30}
+                    height={30}
+                    className="hero-proof__avatar"
+                  />
+                </div>
+              ))}
+            </div>
+            <p>Join 500+ businesses already live with OneNet Servers</p>
           </div>
-          <p>Join 500+ businesses already live with OneNet Servers</p>
+
+          <h1 className="hero-h1">
+            Get your business online
+          </h1>
+
+          <p className="hero-sub">
+            Launch your website in under 10&nbsp;minutes. No developer, no stress.
+          </p>
         </div>
+
+        {/* Search pinned to base */}
+        <div className="hero-search-row">
+          <div className="hero-search-wrap">
+            <DomainSearch />
+          </div>
+          <p className="hero-price-anchor">
+            Hosting from <strong>{prices.hosting}</strong><br />
+            Domains from <strong>{prices.domains}</strong>
+          </p>
+        </div>
+
       </div>
+
+      {/* Fixed tooltip — rendered outside stacking contexts, never clipped */}
+      {tooltip && (
+        <div
+          className="hero-proof__tooltip"
+          style={{
+            position: "fixed",
+            bottom: "auto",
+            left: `${tooltip.x}px`,
+            opacity: 1,
+            top: `${tooltip.y}px`,
+            transform: "translateX(-50%) translateY(calc(-100% - 10px))",
+            zIndex: 9999,
+            pointerEvents: "none",
+          }}
+        >
+          <strong>{tooltip.name}</strong>
+          <em>{tooltip.role}</em>
+        </div>
+      )}
     </section>
   );
 }
