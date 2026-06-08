@@ -7,9 +7,9 @@ import { useCurrency } from "@/lib/currency-context";
 import type { Currency } from "@/lib/site-data";
 
 const AVATARS = [
-  { src: "/assets/proof/ada.webp", alt: "Ada", name: "Ada", role: "Entrepreneur" },
-  { src: "/assets/proof/emeka.webp", alt: "Emeka", name: "Emeka", role: "Business Owner" },
-  { src: "/assets/proof/seun.webp", alt: "Seun", name: "Seun", role: "Freelancer" },
+  { src: "/assets/images/ada.png", alt: "Ada", name: "Ada", role: "Entrepreneur" },
+  { src: "/assets/images/emeka.png", alt: "Emeka", name: "Emeka", role: "Business Owner" },
+  { src: "/assets/images/seun.png", alt: "Seun", name: "Seun", role: "Freelancer" },
 ];
 
 const STARTING_PRICES: Record<Currency, { hosting: string; domains: string }> = {
