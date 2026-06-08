@@ -28,6 +28,7 @@ import {
   X,
   ShoppingCart,
   LogIn,
+  User,
   ArrowRight,
   Phone,
   MessageCircle,
@@ -546,9 +547,8 @@ export function Nav() {
 
             <div className="nav-auth-switch">
               {authResolved && isAuthenticated ? (
-                <a href={myAccountHref} className="nav-secondary-link">
-                  <LogIn className="h-3.5 w-3.5" />
-                  My account
+                <a href={myAccountHref} className="nav-icon-btn" aria-label="My account">
+                  <User className="h-5 w-5" />
                 </a>
               ) : (
                 <button
