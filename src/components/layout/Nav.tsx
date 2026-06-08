@@ -123,12 +123,9 @@ const CurrencyFlag = ({ code }: { code: Currency }) => {
 function DesktopDropdown({ group }: { group: NavGroup }) {
   const [open, setOpen] = useState(false);
   const isHosting = group.title === "Hosting";
-  const isCompany = group.title === "Company";
-  const alignsRight = isCompany;
   const panelClassName = cn(
     "nav-dropdown-panel",
     isHosting && "nav-dropdown-panel--hosting",
-    isCompany && "nav-dropdown-panel--company",
     group.title === "Domains" && "nav-dropdown-panel--domains",
     group.title === "Tools & Security" && "nav-dropdown-panel--tools",
   );
@@ -176,9 +173,9 @@ function DesktopDropdown({ group }: { group: NavGroup }) {
           <div
             style={{
               top: "calc(100% + 4px)",
-              left: alignsRight ? "auto" : "50%",
-              right: alignsRight ? 0 : "auto",
-              transform: alignsRight ? undefined : "translateX(-50%)",
+              left: 0,
+              right: "auto",
+              transform: "none",
               zIndex: 200,
             }}
             className={panelClassName}
