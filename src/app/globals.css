@@ -501,7 +501,8 @@ select {
   display: flex;
   width: 100%;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
+  gap: 10px;
   border: 0;
   border-radius: var(--r1);
   background: transparent;
