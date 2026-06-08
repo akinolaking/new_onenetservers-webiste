@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useState, type MouseEvent } from "react";
 import { DomainSearch } from "@/components/primitives/DomainSearch";
 import { useCurrency } from "@/lib/currency-context";
 import type { Currency } from "@/lib/site-data";
@@ -17,11 +18,24 @@ const STARTING_PRICES: Record<Currency, { hosting: string; domains: string }> = 
   USD: { hosting: "$4.05/mo", domains: "$11.25/yr" },
 };
 
-const HERO_VIDEO_URL = "https://eu2.contabostorage.com/ea33529288244a5ba1392f473566ed15:panelalpha/onenetserversimagesfolders/onenet%20servers%20customer.webm";
+const HERO_VIDEO_URL = "/assets/contabo/home/onenet-customers.webm";
+
+type TooltipState = { name: string; role: string; x: number; y: number } | null;
 
 export function Hero() {
   const { currency } = useCurrency();
   const prices = STARTING_PRICES[currency];
+  const [tooltip, setTooltip] = useState<TooltipState>(null);
+
+  function handleAvatarEnter(e: MouseEvent<HTMLDivElement>, av: typeof AVATARS[0]) {
+    const rect = e.currentTarget.getBoundingClientRect();
+    setTooltip({
+      name: av.name,
+      role: av.role,
+      x: rect.left + rect.width / 2,
+      y: rect.top,
+    });
+  }
 
   return (
     <section className="hero-home" aria-label="Get your business online">
@@ -38,7 +52,12 @@ export function Hero() {
           <div className="hero-proof">
             <div className="hero-proof__avatars">
               {AVATARS.map((av, i) => (
-                <div key={i} className="hero-proof__item">
+                <div
+                  key={i}
+                  className="hero-proof__item"
+                  onMouseEnter={(e) => handleAvatarEnter(e, av)}
+                  onMouseLeave={() => setTooltip(null)}
+                >
                   <Image
                     src={av.src}
                     alt={av.alt}
@@ -46,10 +65,6 @@ export function Hero() {
                     height={30}
                     className="hero-proof__avatar"
                   />
-                  <span className="hero-proof__tooltip">
-                    <strong>{av.name}</strong>
-                    <em>{av.role}</em>
-                  </span>
                 </div>
               ))}
             </div>
@@ -77,6 +92,26 @@ export function Hero() {
         </div>
 
       </div>
+
+      {/* Fixed tooltip — rendered outside stacking contexts, never clipped */}
+      {tooltip && (
+        <div
+          className="hero-proof__tooltip"
+          style={{
+            position: "fixed",
+            bottom: "auto",
+            left: `${tooltip.x}px`,
+            opacity: 1,
+            top: `${tooltip.y}px`,
+            transform: "translateX(-50%) translateY(calc(-100% - 10px))",
+            zIndex: 9999,
+            pointerEvents: "none",
+          }}
+        >
+          <strong>{tooltip.name}</strong>
+          <em>{tooltip.role}</em>
+        </div>
+      )}
     </section>
   );
 }
